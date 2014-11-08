@@ -1,0 +1,283 @@
+/**
+ *
+ * CA448 Compiler Construction
+ * Assignment 1: A Lexical Analyser for the simpL Language
+ *
+ * This project is my own work. I have not recieved assistance beyond what is
+ * normal, and we have cited any sources from which I have borrowed. I have
+ * not given a copy of our work, or a part of our work, to anyone. I are aware
+ * that copying or giving a copy may have serious consequences.
+ *
+ *  Reference: https://javacc.java.net/doc/JavaCC.html
+ *
+ *  @author Ian Duffy, 11356066
+ *
+ */
+
+PARSER_BEGIN(SimpL)
+
+import java.util.HashSet;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+class SimpL {
+    public static void main(String[] args) throws ParseException {
+
+        if (args.length == 0) {
+            System.out.println("Reading from standard input...");
+            new SimpL(System.in);
+        } else if (args.length == 1) {
+            try {
+                new SimpL(new FileInputStream((args[0])));
+            } catch (FileNotFoundException e) {
+                System.err.println(e.getMessage());
+                System.exit(1);
+            }
+        } else {
+            System.out.println("Usage:");
+            System.out.println("java SimpL < input");
+            System.out.println("OR");
+            System.out.println("java SimpL fileInput");
+            System.exit(1);
+        }
+
+        Token token = getNextToken();
+        HashSet<Integer> tokenImages = new HashSet<Integer>();
+        while(token.kind != EOF) {
+            tokenImages.add(token.kind);
+            System.out.printf("%-15s%-10s%n", tokenImage[token.kind], token.image);
+            token = getNextToken();
+        }
+
+        if(tokenImages.contains(OTHER)) {
+            System.out.println("One or more of the tokens in the given input were unrecognized");
+        }
+    }
+}
+PARSER_END(SimpL)
+
+TOKEN_MGR_DECLS :
+{
+    static int commentNesting = 0;
+}
+
+// Skip whitespace.
+SKIP :
+{
+    " "
+    | "\n"
+    | "\t"
+    | "\b"
+    | "\r"
+    | "\f"
+}
+
+// Skip comments.
+SKIP :
+{
+    < "--" (~["\r", "\n"]) *>
+    | <"/*"> {commentNesting++; } : MULTILINE_COMMENT_STATE
+}
+
+// Handle multiline comments.
+<MULTILINE_COMMENT_STATE> SKIP :
+{
+    <"/*"> {
+        commentNesting++;
+    }
+    | "*/" {
+        commentNesting--;
+        if(commentNesting == 0) SwitchTo(DEFAULT);
+      }
+    | <~[] >
+}
+
+
+TOKEN :
+{
+    <LPAREN: "(">
+    | <RPAREN: ")">
+    | <LBRACE: "{">
+    | <RBRACE: "}">
+    | <COMMA: ",">
+    | <SEMICOLON: ";">
+    | <COLON: ":">
+    | <DOT: ".">
+    | <ASSIGN: ":=">
+    | <QUESTION: "?">
+    | <EXCLAMATION: "!">
+}
+
+TOKEN :
+{
+    <ADD: "+">
+    | <SUB: "-">
+    | <MULT: "*">
+    | <DIV: "/">
+    | <MOD: "%">
+    | <EQ: "=">
+    | <NOTEQ: "!=">
+    | <LT: "<">
+    | <GT: ">">
+    | <LE: "<=">
+    | <GE: ">=">
+}
+
+TOKEN :
+{
+    < AND : "and" >
+    | < BOOL : "boolean" >
+    | < CONST : "const" >
+    | < DO : "do" >
+    | < ELSE : "else" >
+    | < FALSE : "false" >
+    | < IF : "if" >
+    | < INT : "int" >
+    | < MAIN : "main" >
+    | < NOT : "not" >
+    | < OR : "or" >
+    | < REAL : "real" >
+    | < RETURN : "return" >
+    | < STRING : "string" >
+    | < THEN : "then" >
+    | < TRUE : "true" >
+    | < VAR : "var" >
+    | < VOID : "void" >
+    | < WHILE : "while" >
+}
+
+TOKEN :
+{
+    < NUMBER : <DIGITS> | <DIGITS> "." <DIGITS>>
+    | < IDENTIFIER : (<LETTER>)(<DIGIT> | <LETTER> | <UNDERSCORE>)*>
+    | <STRINGS: "\"" (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])?
+                                                                            | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* "\"">
+}
+
+TOKEN :
+{
+    < #DIGIT : (["0" - "9"]) >
+    | < #DIGITS : (<DIGIT>)+ >
+    | < #LETTER : (["a" - "z", "A" - "Z"]) >
+    | < #LETTERS : (<LETTER>)+ >
+    | < #UNDERSCORE : ("_") >
+}
+
+TOKEN :
+{
+    <OTHER : ~[]>
+}
+
+
+SimpleNode program() : {}
+{
+    (
+        (decl())*
+        (function())*
+        (main_prog())
+    ) <EOF> {
+        return jjtThis;
+    }
+}
+
+void decl() : {}
+{
+    (
+        var_decl() | const_decl()
+    )
+}
+
+void var_decl() : {}
+{
+    <VAR> ident_list() <COLON> type() (<COMMA> ident_list() <COLON> type())* <SEMICOLON>
+}
+
+void const_decl() : {}
+{
+    <CONST> <IDENTIFIER> <COLON> type() <EQ> expression() (<COMMA> <IDENTIFIER> <COLON>
+                                                            type() <EQ> expression())*<SEMICOLON>
+}
+
+void function() : {}
+{
+    type() <IDENTIFIER> <LPAREN>param_list()<RPAREN>
+    <LBRACE>
+    (decl())*
+    (statement() <SEMICOLON> )*
+    <RETURN> expression() | {} <SEMICOLON>
+    <RBRACE>
+
+}
+
+void param_list() : {}
+{
+    (<IDENTIFIER> <COLON> type() ( <COMMA> <IDENTIFIER> <COLON> type() )* | {})
+}
+
+void type() : {}
+{
+    <INT> | <BOOL> | <REAL> | <STRING> | <VOID>
+}
+
+void main_prog() : {}
+{
+    <MAIN>(decl())*(statement()<SEMICOLON>)*
+}
+
+void statement() : {}
+{
+   <IDENTIFIER>
+      (   <ASSIGN> ( expression() | <STRING> )
+      |   <LPAREN> arg_list() <RPAREN>
+      )
+    | <EXCLAMATION> expression()
+    | <QUESTION> <IDENTIFIER>
+    | <LBRACE>(statement() <SEMICOLON> )*<RBRACE>
+    | <IF> condition() <THEN> statement() <ELSE> statement()
+    | <WHILE> condition() <DO> statement()
+    | {}
+}
+
+void expression() : {}
+{
+	LOOKAHEAD(2)
+	term() (LOOKAHEAD(2) (<ADD> | <SUB>) expression())* | <IDENTIFIER> <LPAREN> arg_list() <RPAREN>
+}
+
+void expression_() : {}
+{
+
+}
+
+void term() : {}
+{
+	unary() (LOOKAHEAD(2) (<MULT> | <DIV>) term())*
+}
+
+void unary() : {}
+{
+	<SUB> fragment() | fragment()
+}
+
+void fragment() : {}
+{
+	<IDENTIFIER>
+	| <NUMBER>
+	| <LPAREN> expression() <RPAREN>
+}
+
+void condition() : {}
+{
+    <NOT>expression()
+    | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
+}
+
+void ident_list() : {}
+{
+    <IDENTIFIER> (<COMMA> <IDENTIFIER> )*
+}
+
+void arg_list() : {}
+{
+    ( <IDENTIFIER> ( <COMMA> <IDENTIFIER>)* | {})
+}

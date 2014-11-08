@@ -1,0 +1,86 @@
+var x, y, z, q, r, n, f : int;
+
+int multiply ()
+{
+   var arg_1, arg_2 : int;
+
+   arg_1 := x;
+   arg_2 := y;
+   z := 0;
+   while arg_2 > 0 do
+   {
+      if (z%2 != 0) then z := z + arg_1 else {};
+      arg_1 := 2*arg_1;
+      arg_2 := arg_2/2;
+   }
+
+   return z;
+}
+
+
+void divide ()
+{
+   var w : int;
+
+   r := x;
+   q := 0;
+   w := y;
+   while w <= r do w := 2*w;
+   while w > y do
+   {
+      q := 2*q;
+      w := w/2;
+      if w <= r then
+      {
+         r := r - w;
+         q := q + 1;
+      }
+      else
+      {
+      }
+   }
+
+   return;
+}
+
+
+int gcd()
+{
+   var f, g : int;
+
+   f := x; g := y;
+   while f != g do
+   }
+      if f < g then g := g - f else {};
+      if g < f then f := f - g else {};
+   }
+   z := f
+
+   return z;
+}
+
+
+int fact (a:int);
+{
+   var f:int;
+
+   f := 1;
+   if a > 1 then
+   {
+      f := a* fact (a-1);
+   }
+   else {}
+
+   return f;
+}
+
+
+main
+{
+   var res, f:int;
+
+   ?x; ?y; res := multiply (); !res;
+   ?x; ?y; divide (); !q; !r;
+   ?x; ?y; res := gcd (); !res;
+   ?n; f := fact (n); !f;
+}
