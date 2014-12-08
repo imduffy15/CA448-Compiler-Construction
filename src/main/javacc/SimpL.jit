@@ -1,0 +1,309 @@
+/**
+ *
+ * CA448 Compiler Construction
+ * Assignment 2: A Lexical Analyser for the simpL Language
+ *
+ * This project is my own work. I have not recieved assistance beyond what is
+ * normal, and we have cited any sources from which I have borrowed. I have
+ * not given a copy of our work, or a part of our work, to anyone. I are aware
+ * that copying or giving a copy may have serious consequences.
+ *
+ *  Reference: https://javacc.java.net/doc/JavaCC.html
+ *
+ *  @author Ian Duffy, 11356066
+ *
+ */
+
+options
+{
+  IGNORE_CASE = false;
+  MULTI = true;
+  VISITOR = true;
+}
+
+
+PARSER_BEGIN(SimpL)
+
+import java.io.*;
+import java.util.*;
+
+class SimpL {
+
+    public static Hashtable<String, STC> ST = new Hashtable<String, STC>();
+
+    public static void main(String[] args) throws ParseException {
+      SimpL parser = new SimpL(System.in);
+      SimpleNode root = parser.program();
+
+      System.out.println("Abstract Syntax Tree:");
+
+      root.dump(" ");
+
+      System.out.println();
+      System.out.println("Symbol Table:");
+
+      for(String key : ST.keySet()) {
+        STC temp2 = ST.get(key);
+        System.out.println(temp2);
+        if(temp2.type != null) {
+            System.out.println(" type = " + temp2.type);
+        }
+        if(temp2.value != null) {
+            System.out.println(" value = " + temp2.value);
+        }
+      }
+
+      // System.out.println();
+      // System.out.println("Program:");
+      // PrintVisitor pv = new PrintVisitor();
+      // root.jjtAccept(pv, null);
+
+      System.out.println();
+      System.out.println("Type Checking:");
+      TypeCheckingVisitor tc = new TypeCheckingVisitor();
+      root.jjtAccept(tc, ST);
+    }
+}
+PARSER_END(SimpL)
+
+TOKEN_MGR_DECLS :
+{
+    static int commentNesting = 0;
+}
+
+// Skip whitespace.
+SKIP :
+{
+    " "
+    | "\n"
+    | "\t"
+    | "\b"
+    | "\r"
+    | "\f"
+}
+
+// Skip comments.
+SKIP :
+{
+    < "--" (~["\r", "\n"]) *>
+    | <"/*"> {commentNesting++; } : MULTILINE_COMMENT_STATE
+}
+
+// Handle multiline comments.
+<MULTILINE_COMMENT_STATE> SKIP :
+{
+    <"/*"> {
+        commentNesting++;
+    }
+    | "*/" {
+        commentNesting--;
+        if(commentNesting == 0) SwitchTo(DEFAULT);
+      }
+    | <~[] >
+}
+
+
+TOKEN :
+{
+    <LPAREN: "(">
+    | <RPAREN: ")">
+    | <LBRACE: "{">
+    | <RBRACE: "}">
+    | <COMMA: ",">
+    | <SEMICOLON: ";">
+    | <COLON: ":">
+    | <DOT: ".">
+    | <ASSIGN: ":=">
+    | <QUESTION: "?">
+    | <EXCLAMATION: "!">
+}
+
+TOKEN :
+{
+    <ADD: "+">
+    | <SUB: "-">
+    | <MULT: "*">
+    | <DIV: "/">
+    | <MOD: "%">
+    | <EQ: "=">
+    | <NOTEQ: "!=">
+    | <LT: "<">
+    | <GT: ">">
+    | <LE: "<=">
+    | <GE: ">=">
+}
+
+TOKEN :
+{
+    < AND : "and" >
+    | < BOOL : "boolean" >
+    | < CONST : "const" >
+    | < DO : "do" >
+    | < ELSE : "else" >
+    | < FALSE : "false" >
+    | < IF : "if" >
+    | < INT : "int" >
+    | < MAIN : "main" >
+    | < NOT : "not" >
+    | < OR : "or" >
+    | < REAL : "real" >
+    | < RETURN : "return" >
+    | < STRING : "string" >
+    | < THEN : "then" >
+    | < TRUE : "true" >
+    | < VAR : "var" >
+    | < VOID : "void" >
+    | < WHILE : "while" >
+}
+
+TOKEN :
+{
+    < NUMBER : <DIGITS> | <DIGITS> "." <DIGITS>>
+    | < IDENTIFIER : (<LETTER>)(<DIGIT> | <LETTER> | <UNDERSCORE>)*>
+    | <STRINGS: "\"" (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])?
+                                                                            | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* "\"">
+}
+
+TOKEN :
+{
+    < #DIGIT : (["0" - "9"]) >
+    | < #DIGITS : (<DIGIT>)+ >
+    | < #LETTER : (["a" - "z", "A" - "Z"]) >
+    | < #LETTERS : (<LETTER>)+ >
+    | < #UNDERSCORE : ("_") >
+}
+
+TOKEN :
+{
+    <OTHER : ~[]>
+}
+
+
+SimpleNode program() : {}
+{
+    (
+        (decl())*
+        (function())*
+        (main_prog())
+    ) <EOF> {
+        return jjtThis;
+    }
+}
+
+void decl() #void : {}
+{
+    (
+        var_decl() | const_decl()
+    )
+}
+
+void var_decl() : {}
+{
+    <VAR> ident_list() <COLON> type() (<COMMA> ident_list() <COLON> type())* <SEMICOLON>
+}
+
+void const_decl() : {}
+{
+    <CONST> identifier() <COLON> type() <EQ> expression() (<COMMA> identifier() <COLON>
+                                                            type() <EQ> expression())*<SEMICOLON>
+}
+
+void function() #void : {}
+{
+    type() identifier() <LPAREN>param_list()<RPAREN>
+    <LBRACE>
+    (decl())*
+    (statement() <SEMICOLON> )*
+    <RETURN> expression() | {} <SEMICOLON>
+    <RBRACE>
+
+}
+
+void param_list() : {}
+{
+    (identifier() <COLON> type() ( <COMMA> identifier() <COLON> type() )* | {})
+}
+
+void type() #void : {}
+{
+    <INT> | <BOOL> | <REAL> | <STRING> | <VOID>
+}
+
+void main_prog() #void : {}
+{
+    <MAIN><LBRACE>(decl())*(statement()<SEMICOLON>)*<RBRACE>
+}
+
+void statement() #void : {}
+{
+   identifier()
+      (   <ASSIGN> ( expression() | <STRING> )
+      |   <LPAREN> arg_list() <RPAREN>
+      )
+    | <EXCLAMATION> expression()
+    | <QUESTION> identifier()
+    | <LBRACE>(statement() <SEMICOLON> )*<RBRACE>
+    | <IF> condition() <THEN> statement() <ELSE> statement()
+    | <WHILE> condition() <DO> statement()
+    | {}
+}
+
+void expression() : {}
+{
+    LOOKAHEAD(2)
+    identifier() <LPAREN> arg_list() <RPAREN> | term() expression_()
+}
+
+void expression_() #void : {}
+{
+    (<ADD> | <SUB>) expression() expression_() | {}
+}
+
+void term() #void : {}
+{
+  fragment() term_()
+}
+
+void term_() #void : {}
+{
+  (<MULT> | <DIV>) term() term_() | {}
+}
+
+void fragment() #void : {}
+{
+  identifier()
+  | number()
+  | (<ADD> | <SUB>) fragment()
+  | <LPAREN> expression() <RPAREN>
+}
+
+void condition() #void : {}
+{
+    <NOT>expression()
+    | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
+}
+
+void ident_list() #void : {}
+{
+    identifier() list_()
+}
+
+void arg_list() #void : {}
+{
+    identifier() list_()
+}
+
+void list_() #void : {}
+{
+    <COMMA> identifier() list_() | {}
+}
+
+void number() : {Token t;}
+{
+  t = <NUMBER> {jjtThis.value = t.image;}
+}
+
+String identifier() : {Token t;}
+{
+  t = <IDENTIFIER> {jjtThis.value = t.image; return t.image;}
+}

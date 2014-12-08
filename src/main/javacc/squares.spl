@@ -9,4 +9,11 @@ main
    var squ : real;
 
    x := 1;
+   
+   while x <= 10 do
+   {
+      squ := square (x);
+      !squ;
+      x := x + 1;
+   };
 }
