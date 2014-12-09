@@ -6,6 +6,7 @@ real square (x:real)
 main
 {
    var x : int;
+   var a, b, c, d : int;
    var squ : real;
 
    x := 1;

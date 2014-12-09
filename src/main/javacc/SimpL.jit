@@ -43,14 +43,8 @@ class SimpL {
       System.out.println("Symbol Table:");
 
       for(String key : ST.keySet()) {
-        STC temp2 = ST.get(key);
-        System.out.println(temp2);
-        if(temp2.type != null) {
-            System.out.println(" type = " + temp2.type);
-        }
-        if(temp2.value != null) {
-            System.out.println(" value = " + temp2.value);
-        }
+        STC variable = ST.get(key);
+        System.out.println(variable);
       }
 
       // System.out.println();
@@ -197,15 +191,30 @@ void decl() #void : {}
     )
 }
 
-void var_decl() : {}
+void var_decl() : {List<String> identifiers; Token type;}
 {
-    <VAR> ident_list() <COLON> type() (<COMMA> ident_list() <COLON> type())* <SEMICOLON>
+    <VAR> identifiers = ident_list() <COLON> type = type() (<COMMA> ident_list() <COLON> type() {
+      jjtThis.value = t.image;
+      for(String identifier : identifiers) {
+        ST.put(identifier, new STC(type.image, identifier));
+      }
+    })* <SEMICOLON> {
+      jjtThis.value = t.image;
+      for(String identifier : identifiers) {
+        ST.put(identifier, new STC(type.image, identifier));
+      }
+    }
 }
 
-void const_decl() : {}
+void const_decl() : {String identifier; Token type; Token value;}
 {
-    <CONST> identifier() <COLON> type() <EQ> expression() (<COMMA> identifier() <COLON>
-                                                            type() <EQ> expression())*<SEMICOLON>
+    <CONST> identifier = identifier() <COLON> t = type() <EQ> value = expression() (<COMMA> identifier = identifier() <COLON> type = type() <EQ> value = expression() {
+      jjThis.value = t.image;
+      ST.put(identifier, new STC(type.image, identifier, value.image))
+    })*<SEMICOLON> {
+      jjtThis.value = t.image;
+      ST.put(identifier, new STC(type.image, identifier, value.image));
+    }
 }
 
 void function() #void : {}
@@ -224,9 +233,13 @@ void param_list() : {}
     (identifier() <COLON> type() ( <COMMA> identifier() <COLON> type() )* | {})
 }
 
-void type() #void : {}
+Token type() #void : {Token t;}
 {
-    <INT> | <BOOL> | <REAL> | <STRING> | <VOID>
+    t = <INT> {return t;}
+    | t = <BOOL> {return t;}
+    | t = <REAL> {return t;}
+    | t = <STRING> {return t;}
+    | t = <VOID> {return t;}
 }
 
 void main_prog() #void : {}
@@ -283,19 +296,30 @@ void condition() #void : {}
     | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
 }
 
-void ident_list() #void : {}
+List<String> ident_list() #void : {String identifier = null; List<String> list = new ArrayList<String>(); }
 {
-    identifier() list_()
+    identifier = identifier() list = list_() {
+       if(identifier != null) list.add(identifier);
+       return list;
+    }
 }
 
-void arg_list() #void : {}
+List<String> arg_list() #void : {String identifier = null; List<String> list = new ArrayList<String>(); }
 {
-    identifier() list_()
+    identifier = identifier() list = list_() {
+       if(identifier != null) list.add(identifier);
+       return list;
+    }
 }
 
-void list_() #void : {}
+List<String> list_() #void : {String identifier = null; List<String> list = new ArrayList<String>(); }
 {
-    <COMMA> identifier() list_() | {}
+    <COMMA> identifier = identifier() list = list_() {
+       if(identifier != null) list.add(identifier);
+       return list;
+    } | {} {
+      return list;
+    }
 }
 
 void number() : {Token t;}

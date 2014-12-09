@@ -47,14 +47,8 @@ class SimpL/*@bgen(jjtree)*/implements SimpLTreeConstants/*@egen*/ {/*@bgen(jjtr
       System.out.println("Symbol Table:");
 
       for(String key : ST.keySet()) {
-        STC temp2 = ST.get(key);
-        System.out.println(temp2);
-        if(temp2.type != null) {
-            System.out.println(" type = " + temp2.type);
-        }
-        if(temp2.value != null) {
-            System.out.println(" value = " + temp2.value);
-        }
+        STC variable = ST.get(key);
+        System.out.println(variable);
       }
 
       // System.out.println();
@@ -233,14 +227,29 @@ void decl()       : {}
 }
 
 void var_decl() : {/*@bgen(jjtree) var_decl */
-  ASTvar_decl jjtn000 = new ASTvar_decl(JJTVAR_DECL);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
+                   ASTvar_decl jjtn000 = new ASTvar_decl(JJTVAR_DECL);
+                   boolean jjtc000 = true;
+                   jjtree.openNodeScope(jjtn000);
+/*@egen*/List<String> identifiers; Token t;}
 {/*@bgen(jjtree) var_decl */
     try {
 /*@egen*/
-    <VAR> ident_list() <COLON> type() (<COMMA> ident_list() <COLON> type())* <SEMICOLON>/*@bgen(jjtree)*/
+    <VAR> identifiers = ident_list() <COLON> t = type() (<COMMA> ident_list() <COLON> type() {
+      jjtn000.value = t.image;
+      for(String identifier : identifiers) {
+        ST.put(identifier, new STC(t.image, identifier));
+      }
+    })* <SEMICOLON>/*@bgen(jjtree)*/
+                    {
+                      jjtree.closeNodeScope(jjtn000, true);
+                      jjtc000 = false;
+                    }
+/*@egen*/ {
+      jjtn000.value = t.image;
+      for(String identifier : identifiers) {
+        ST.put(identifier, new STC(t.image, identifier));
+      }
+    }/*@bgen(jjtree)*/
     } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -342,9 +351,13 @@ void param_list() : {/*@bgen(jjtree) param_list */
 /*@egen*/
 }
 
-void type()       : {}
+Token type()       : {Token t;}
 {
-    <INT> | <BOOL> | <REAL> | <STRING> | <VOID>
+    t = <INT> {return t;}
+    | t = <BOOL> {return t;}
+    | t = <REAL> {return t;}
+    | t = <STRING> {return t;}
+    | t = <VOID> {return t;}
 }
 
 void main_prog()       : {}
@@ -427,19 +440,30 @@ void condition()       : {}
     | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
 }
 
-void ident_list()       : {}
+List<String> ident_list()       : {String identifier = null; List<String> list = new ArrayList<String>(); }
 {
-    identifier() list_()
+    identifier = identifier() list = list_() {
+       if(identifier != null) list.add(identifier);
+       return list;
+    }
 }
 
-void arg_list()       : {}
+List<String> arg_list()       : {String identifier = null; List<String> list = new ArrayList<String>(); }
 {
-    identifier() list_()
+    identifier = identifier() list = list_() {
+       if(identifier != null) list.add(identifier);
+       return list;
+    }
 }
 
-void list_()       : {}
+List<String> list_()       : {String identifier = null; List<String> list = new ArrayList<String>(); }
 {
-    <COMMA> identifier() list_() | {}
+    <COMMA> identifier = identifier() list = list_() {
+       if(identifier != null) list.add(identifier);
+       return list;
+    } | {} {
+      return list;
+    }
 }
 
 void number() : {/*@bgen(jjtree) number */

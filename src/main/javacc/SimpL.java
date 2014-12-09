@@ -19,14 +19,8 @@ class SimpL/*@bgen(jjtree)*/implements SimpLTreeConstants, SimpLConstants {/*@bg
       System.out.println("Symbol Table:");
 
       for(String key : ST.keySet()) {
-        STC temp2 = ST.get(key);
-        System.out.println(temp2);
-        if(temp2.type != null) {
-            System.out.println(" type = " + temp2.type);
-        }
-        if(temp2.value != null) {
-            System.out.println(" value = " + temp2.value);
-        }
+        STC variable = ST.get(key);
+        System.out.println(variable);
       }
 
       // System.out.println();
@@ -122,14 +116,14 @@ if (jjtc000) {
   }
 
   static final public void var_decl() throws ParseException {/*@bgen(jjtree) var_decl */
-  ASTvar_decl jjtn000 = new ASTvar_decl(JJTVAR_DECL);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+                   ASTvar_decl jjtn000 = new ASTvar_decl(JJTVAR_DECL);
+                   boolean jjtc000 = true;
+                   jjtree.openNodeScope(jjtn000);List<String> identifiers; Token t;
     try {
       jj_consume_token(VAR);
-      ident_list();
+      identifiers = ident_list();
       jj_consume_token(COLON);
-      type();
+      t = type();
       label_3:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -145,8 +139,18 @@ if (jjtc000) {
         ident_list();
         jj_consume_token(COLON);
         type();
+jjtn000.value = t.image;
+      for(String identifier : identifiers) {
+        ST.put(identifier, new STC(t.image, identifier));
+      }
       }
       jj_consume_token(SEMICOLON);
+jjtree.closeNodeScope(jjtn000, true);
+                      jjtc000 = false;
+jjtn000.value = t.image;
+      for(String identifier : identifiers) {
+        ST.put(identifier, new STC(t.image, identifier));
+      }
     } catch (Throwable jjte000) {
 if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -338,26 +342,31 @@ if (jjtc000) {
     }
   }
 
-  static final public void type() throws ParseException {
+  static final public Token type() throws ParseException {Token t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case INT:{
-      jj_consume_token(INT);
+      t = jj_consume_token(INT);
+{if ("" != null) return t;}
       break;
       }
     case BOOL:{
-      jj_consume_token(BOOL);
+      t = jj_consume_token(BOOL);
+{if ("" != null) return t;}
       break;
       }
     case REAL:{
-      jj_consume_token(REAL);
+      t = jj_consume_token(REAL);
+{if ("" != null) return t;}
       break;
       }
     case STRING:{
-      jj_consume_token(STRING);
+      t = jj_consume_token(STRING);
+{if ("" != null) return t;}
       break;
       }
     case VOID:{
-      jj_consume_token(VOID);
+      t = jj_consume_token(VOID);
+{if ("" != null) return t;}
       break;
       }
     default:
@@ -365,6 +374,7 @@ if (jjtc000) {
       jj_consume_token(-1);
       throw new ParseException();
     }
+    throw new Error("Missing return statement in function");
   }
 
   static final public void main_prog() throws ParseException {
@@ -716,28 +726,38 @@ if (jjtc000) {
     }
   }
 
-  static final public void ident_list() throws ParseException {
-    identifier();
-    list_();
+  static final public List<String> ident_list() throws ParseException {String identifier = null; List<String> list = new ArrayList<String>();
+    identifier = identifier();
+    list = list_();
+if(identifier != null) list.add(identifier);
+       {if ("" != null) return list;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void arg_list() throws ParseException {
-    identifier();
-    list_();
+  static final public List<String> arg_list() throws ParseException {String identifier = null; List<String> list = new ArrayList<String>();
+    identifier = identifier();
+    list = list_();
+if(identifier != null) list.add(identifier);
+       {if ("" != null) return list;}
+    throw new Error("Missing return statement in function");
   }
 
-  static final public void list_() throws ParseException {
+  static final public List<String> list_() throws ParseException {String identifier = null; List<String> list = new ArrayList<String>();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case COMMA:{
       jj_consume_token(COMMA);
-      identifier();
-      list_();
+      identifier = identifier();
+      list = list_();
+if(identifier != null) list.add(identifier);
+       {if ("" != null) return list;}
       break;
       }
     default:
       jj_la1[26] = jj_gen;
 
+{if ("" != null) return list;}
     }
+    throw new Error("Missing return statement in function");
   }
 
   static final public void number() throws ParseException {/*@bgen(jjtree) number */
