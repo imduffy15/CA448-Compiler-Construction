@@ -3,23 +3,45 @@ public interface SimpLTreeConstants
 {
   public int JJTPROGRAM = 0;
   public int JJTVOID = 1;
-  public int JJTVAR_DECL = 2;
+  public int JJTVARDECL = 2;
   public int JJTCONST_DECL = 3;
-  public int JJTPARAM_LIST = 4;
-  public int JJTEXPRESSION = 5;
-  public int JJTNUMBER = 6;
-  public int JJTIDENTIFIER = 7;
+  public int JJTFUNCTION = 4;
+  public int JJTPARAMLIST = 5;
+  public int JJTMAIN = 6;
+  public int JJTASSIGNMENT = 7;
+  public int JJTFUNCTIONCALL = 8;
+  public int JJTEVALUATION = 9;
+  public int JJTADDEXPR = 10;
+  public int JJTSUBEXPR = 11;
+  public int JJTMULTEXPR = 12;
+  public int JJTDIVEXPR = 13;
+  public int JJTCONDITION = 14;
+  public int JJTIDENTLIST = 15;
+  public int JJTARGLIST = 16;
+  public int JJTNUMBER = 17;
+  public int JJTIDENTIFIER = 18;
 
 
   public String[] jjtNodeName = {
-    "program",
+    "Program",
     "void",
-    "var_decl",
+    "VarDecl",
     "const_decl",
-    "param_list",
-    "expression",
-    "number",
-    "identifier",
+    "Function",
+    "ParamList",
+    "Main",
+    "Assignment",
+    "FunctionCall",
+    "Evaluation",
+    "AddExpr",
+    "SubExpr",
+    "MultExpr",
+    "DivExpr",
+    "Condition",
+    "IdentList",
+    "ArgList",
+    "Number",
+    "Identifier",
   };
 }
-/* JavaCC - OriginalChecksum=57c5f852bd2c2f05d0e06458c9acdfa2 (do not edit this line) */
+/* JavaCC - OriginalChecksum=dc879b1b2157f244228e9d41f6d85f77 (do not edit this line) */

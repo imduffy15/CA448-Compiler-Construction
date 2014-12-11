@@ -7,26 +7,59 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
   public Object visit(SimpleNode node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTprogram node, Object data){
+  public Object visit(ASTProgram node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTvar_decl node, Object data){
+  public Object visit(ASTVarDecl node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTconst_decl node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTparam_list node, Object data){
+  public Object visit(ASTFunction node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTexpression node, Object data){
+  public Object visit(ASTParamList node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTnumber node, Object data){
+  public Object visit(ASTMain node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTidentifier node, Object data){
+  public Object visit(ASTAssignment node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTFunctionCall node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTEvaluation node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTAddExpr node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTSubExpr node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTMultExpr node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTDivExpr node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTCondition node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTIdentList node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTArgList node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTNumber node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTIdentifier node, Object data){
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=0ad6c6cfb50669789be9abd12db99bdd (do not edit this line) */
+/* JavaCC - OriginalChecksum=ef0cb6158f422058f2e61838cd5322ed (do not edit this line) */

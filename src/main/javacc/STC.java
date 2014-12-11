@@ -1,45 +1,88 @@
+import java.util.*;
+
 public class STC {
-    private String type;
-    private String identifier;
-    private String value;
+    private Token type;
+    private Token identifier;
+    private String scope;
+    private boolean function;
+    private Map<String, Object> data;
 
-    public STC(String type, String identifier) {
-    	this.type = type;
-    	this.identifier = identifier;
+    public STC(Token identifier, String scope) {
+        this.identifier = identifier;
+        this.scope = scope;
+        this.data = new HashMap<String, Object>();
+		this.function = false;
     }
 
-    public STC(String type, String identifier, String value) {
-		this.type = type;
+	public STC(Token identifier, String scope, boolean function) {
 		this.identifier = identifier;
-		this.value = value;
+		this.scope = scope;
+		this.data = new HashMap<String, Object>();
+		this.function = true;
+	}
+
+    public STC(Token identifier, Token type, String scope) {
+    	this.identifier = identifier;
+        this.type = type;
+        this.scope = scope;
+        this.data = new HashMap<String, Object>();
+		this.function = false;
     }
 
-    String getType() {
+	public STC(Token identifier, Token type, String scope, boolean function) {
+		this.identifier = identifier;
+		this.type = type;
+		this.scope = scope;
+		this.data = new HashMap<String, Object>();
+		this.function = function;
+	}
+
+	public boolean isFunction() {
+		return function;
+	}
+
+	public void setFunction(boolean function) {
+		this.function = function;
+	}
+
+	Token getType() {
     	return type;
     }
 
-    void setType(String type) {
+    void setType(Token type) {
     	this.type = type;
     }
 
-    String getIdentifier() {
+    Token getIdentifier() {
     	return identifier;
     }
 
-    void setIdentifier(String identifier) {
+    void setIdentifier(Token identifier) {
     	this.identifier = identifier;
     }
 
-    String getValue() {
-    	return value;
+    String getScope() {
+        return scope;
     }
 
-    void setValue(String value) {
-    	this.value = value;
+    Map getData() {
+        return data;
+    }
+
+    Object getData(String key) {
+        return data.get(key);
+    }
+
+    void addData(String key, Object obj) {
+        data.put(key, obj);
+    }
+
+    void setScope(String scope) {
+        this.scope = scope;
     }
 
 	@Override
 	public String toString() {
-		return "Identifier: " + identifier + " Type: " + type + " value: " + value;
+		return type + " " + identifier + " " + scope + " " + data;
 	}
 }

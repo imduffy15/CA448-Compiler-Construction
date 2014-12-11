@@ -16,9 +16,10 @@
 
 options
 {
-  IGNORE_CASE = false;
-  MULTI = true;
-  VISITOR = true;
+   IGNORE_CASE = false;
+   MULTI=true;
+   VISITOR=true;
+   NODE_DEFAULT_VOID=true;
 }
 
 
@@ -29,33 +30,38 @@ import java.util.*;
 
 class SimpL {
 
-    public static Hashtable<String, STC> ST = new Hashtable<String, STC>();
+    public static String scope = "global";
+    public static int scopeCounter = 0;
+    public static LinkedList<Token> stack = new LinkedList<Token>();
+    public static HashMap<String, HashMap<String, STC>> symbolTable = new HashMap<String, HashMap<String, STC>>();
+
+    public static List<Token> popUntil(String until) {
+      LinkedList<Token> value = new LinkedList<Token>();
+      for (Token token = stack.pop();token!=null;token=stack.pop()) {
+        if(token.image.equals(until)) {
+            break;
+        }
+        value.addFirst(token);
+      }
+      return value;
+    }
 
     public static void main(String[] args) throws ParseException {
+
+      symbolTable.put(scope, new HashMap<String, STC>());
+
       SimpL parser = new SimpL(System.in);
-      SimpleNode root = parser.program();
+      ASTProgram program = parser.program();
 
       System.out.println("Abstract Syntax Tree:");
 
-      root.dump(" ");
+      program.dump("    ");
 
-      System.out.println();
-      System.out.println("Symbol Table:");
+	  System.out.println();
+	  System.out.println("Semantic Checker:");
+	  SemanticCheckVisitor semanticCheckVisitor = new SemanticCheckVisitor();
+	  program.jjtAccept(semanticCheckVisitor, symbolTable);
 
-      for(String key : ST.keySet()) {
-        STC variable = ST.get(key);
-        System.out.println(variable);
-      }
-
-      // System.out.println();
-      // System.out.println("Program:");
-      // PrintVisitor pv = new PrintVisitor();
-      // root.jjtAccept(pv, null);
-
-      System.out.println();
-      System.out.println("Type Checking:");
-      TypeCheckingVisitor tc = new TypeCheckingVisitor();
-      root.jjtAccept(tc, ST);
     }
 }
 PARSER_END(SimpL)
@@ -154,8 +160,7 @@ TOKEN :
 {
     < NUMBER : <DIGITS> | <DIGITS> "." <DIGITS>>
     | < IDENTIFIER : (<LETTER>)(<DIGIT> | <LETTER> | <UNDERSCORE>)*>
-    | <STRINGS: "\"" (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])?
-                                                                            | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* "\"">
+    | <STRINGS: "\"" (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* "\"">
 }
 
 TOKEN :
@@ -173,161 +178,298 @@ TOKEN :
 }
 
 
-SimpleNode program() : {}
+ASTProgram program() #Program:
+{}
 {
     (
         (decl())*
         (function())*
         (main_prog())
-    ) <EOF> {
-        return jjtThis;
+    ) <EOF>
+    {
+      return jjtThis;
     }
 }
 
-void decl() #void : {}
+void decl() :
+{}
 {
     (
-        var_decl() | const_decl()
+        var_decl()
+        | const_decl()
     )
 }
 
-void var_decl() : {List<String> identifiers; Token type;}
+void var_decl() #VarDecl :
+{List<Token> identList;}
 {
-    <VAR> identifiers = ident_list() <COLON> type = type() (<COMMA> ident_list() <COLON> type() {
-      jjtThis.value = t.image;
-      for(String identifier : identifiers) {
-        ST.put(identifier, new STC(type.image, identifier));
+    <VAR> identList = ident_list() <COLON> type() (<COMMA> identList = ident_list() <COLON> type()
+    {
+      Token type = stack.pop();
+      for(Token identifier : identList) {
+        symbolTable.get(scope).put(identifier.image, new STC(identifier, type, scope));
       }
-    })* <SEMICOLON> {
-      jjtThis.value = t.image;
-      for(String identifier : identifiers) {
-        ST.put(identifier, new STC(type.image, identifier));
+      jjtThis.value = Arrays.asList(type, identList);
+    }
+    )* <SEMICOLON>
+    {
+      Token type = stack.pop();
+      for(Token identifier : identList) {
+        symbolTable.get(scope).put(identifier.image, new STC(identifier, type, scope));
       }
+      jjtThis.value = Arrays.asList(type, identList);
     }
 }
 
-void const_decl() : {String identifier; Token type; Token value;}
+void const_decl() #const_decl :
+{}
 {
-    <CONST> identifier = identifier() <COLON> t = type() <EQ> value = expression() (<COMMA> identifier = identifier() <COLON> type = type() <EQ> value = expression() {
-      jjThis.value = t.image;
-      ST.put(identifier, new STC(type.image, identifier, value.image))
-    })*<SEMICOLON> {
-      jjtThis.value = t.image;
-      ST.put(identifier, new STC(type.image, identifier, value.image));
+    <CONST> identifier() <COLON> type() <EQ> expression() (<COMMA> identifier() <COLON> type() <EQ> expression()
+    {
+      // stack.push(type);
+      // stack.push(identifier);
+    }
+    )* <SEMICOLON>
+    {
+      // stack.push(type);
+      // stack.push(identifier);
     }
 }
 
-void function() #void : {}
+void function() #Function :
+{List<Token> paramList;}
 {
-    type() identifier() <LPAREN>param_list()<RPAREN>
+    type() identifier() <LPAREN> paramList = param_list() <RPAREN>
+    {
+      Token identifier = stack.pop();
+      Token type = stack.pop();
+
+      HashMap<String, STC> scopedSymbolTable = symbolTable.get(scope);
+      STC stc = new STC(identifier, type, scope);
+      stc.addData("paramList", paramList);
+      scopedSymbolTable.put(identifier.image, stc);
+      symbolTable.put(scope, scopedSymbolTable);
+
+      scope = "function-" + ++scopeCounter;
+      symbolTable.put(scope, new HashMap<String, STC>());
+
+      jjtThis.value = Arrays.asList(type, identifier, paramList);
+    }
     <LBRACE>
     (decl())*
     (statement() <SEMICOLON> )*
-    <RETURN> expression() | {} <SEMICOLON>
+    {stack.push(new Token(999, "RETURNVALUE"));} <RETURN> expression() | {} <SEMICOLON>
     <RBRACE>
-
+    {
+      List<Token> returnValue = popUntil("RETURNVALUE");
+    }
 }
 
-void param_list() : {}
+List<Token> param_list() #ParamList : {}
 {
-    (identifier() <COLON> type() ( <COMMA> identifier() <COLON> type() )* | {})
+    {stack.push(new Token(JJTPARAMLIST, jjtNodeName[JJTPARAMLIST]));}
+    (identifier() <COLON> type() ( <COMMA> identifier() <COLON> type())* | {})
+    {
+      List<Token> list = popUntil(jjtNodeName[JJTPARAMLIST]);
+      System.out.println(list);
+      jjtThis.value = list;
+      return list;
+    }
 }
 
-Token type() #void : {Token t;}
+void type() :
+{}
 {
-    t = <INT> {return t;}
-    | t = <BOOL> {return t;}
-    | t = <REAL> {return t;}
-    | t = <STRING> {return t;}
-    | t = <VOID> {return t;}
+    <INT>
+    {
+      stack.push(token);
+    }
+
+    | <BOOL>
+    {
+      stack.push(token);
+    }
+
+    | <REAL>
+    {
+      stack.push(token);
+    }
+
+    | <STRING>
+    {
+      stack.push(token);
+    }
+
+
+    | <VOID>
+    {
+      stack.push(token);
+    }
 }
 
-void main_prog() #void : {}
+void main_prog() #Main :
+{}
 {
+    {
+      scope = "main";
+      symbolTable.put(scope, new HashMap<String, STC>());
+    }
     <MAIN><LBRACE>(decl())*(statement()<SEMICOLON>)*<RBRACE>
 }
 
-void statement() #void : {}
+void statement() :
+{Token identifier; List<Token> argList;}
 {
-   identifier()
-      (   <ASSIGN> ( expression() | <STRING> )
-      |   <LPAREN> arg_list() <RPAREN>
-      )
-    | <EXCLAMATION> expression()
+    identifier = identifier()
+    (
+      {stack.push(new Token(JJTASSIGNMENT, jjtNodeName[JJTASSIGNMENT]));}
+      <ASSIGN> ( expression() | <STRINGS> )
+      {
+        List<Token> assignment = popUntil(jjtNodeName[JJTASSIGNMENT]);
+        stack.pop();
+        System.out.println("ASSIGNMENT: " + identifier + " = " + assignment);
+        STC symbolTableChild = symbolTable.get(scope).get(identifier.image);
+
+        if(symbolTableChild == null) {
+          symbolTableChild = new STC(identifier, scope);
+          symbolTableChild.addData("initialized", false);
+        }
+
+        if(symbolTableChild.getData("values") == null) {
+          symbolTableChild.addData("values", new ArrayList<List<Token>>());
+        }
+
+        List<List<Token>> values = (List) symbolTableChild.getData("values");
+        values.add(assignment);
+
+        jjtThis.value = Arrays.asList(identifier, assignment);
+      } #Assignment
+      | <LPAREN> argList=arg_list() <RPAREN>
+      {
+      	jjtThis.value = Arrays.asList(identifier, argList);
+      } #FunctionCall
+    )
+
+    | ({stack.push(new Token(JJTEVALUATION, jjtNodeName[JJTEVALUATION]));}
+      <EXCLAMATION> expression())
+      {
+        List<Token> evaluationExp = popUntil(jjtNodeName[JJTEVALUATION]);
+      } #Evaluation
+
     | <QUESTION> identifier()
+    {
+    	stack.pop();
+    }
+
     | <LBRACE>(statement() <SEMICOLON> )*<RBRACE>
     | <IF> condition() <THEN> statement() <ELSE> statement()
     | <WHILE> condition() <DO> statement()
     | {}
 }
 
-void expression() : {}
+void expression() :
+{Token identifier; List<Token> argList;}
 {
     LOOKAHEAD(2)
-    identifier() <LPAREN> arg_list() <RPAREN> | term() expression_()
+    identifier = identifier() <LPAREN> argList = arg_list() {for(Token arg : argList) stack.push(arg); } <RPAREN>
+    {
+    	jjtThis.value = Arrays.asList(identifier, argList);
+    } #FunctionCall
+    | term() addSubExpression()
 }
 
-void expression_() #void : {}
+void addSubExpression() :
+{}
 {
-    (<ADD> | <SUB>) expression() expression_() | {}
+    {stack.push(new Token(ADD, tokenImage[ADD]));} <ADD> expression() addSubExpression() #AddExpr(2)
+    | {stack.push(new Token(SUB, tokenImage[SUB]));} <SUB> expression() addSubExpression() #SubExpr(2)
+    | {}
 }
 
-void term() #void : {}
+void term() :
+{}
 {
-  fragment() term_()
+  fragment() multDivExpression()
 }
 
-void term_() #void : {}
+void multDivExpression() :
+{}
 {
-  (<MULT> | <DIV>) term() term_() | {}
+  {stack.push(new Token(MULT, tokenImage[MULT]));} <MULT> term() multDivExpression() #MultExpr(2)
+  | {stack.push(new Token(DIV, tokenImage[DIV]));} <DIV> term() multDivExpression() #DivExpr(2)
+  | {}
 }
 
-void fragment() #void : {}
+void fragment() :
+{}
 {
   identifier()
   | number()
-  | (<ADD> | <SUB>) fragment()
+  | {stack.push(new Token(ADD, tokenImage[ADD]));} <ADD> fragment()
+  | {stack.push(new Token(SUB, tokenImage[SUB]));} <SUB> fragment()
   | <LPAREN> expression() <RPAREN>
 }
 
-void condition() #void : {}
+List<Token> condition() #Condition :
+{}
 {
-    <NOT>expression()
+    {stack.push(new Token(JJTCONDITION, jjtNodeName[JJTCONDITION]));}
+    (<NOT>expression()
     | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
-}
-
-List<String> ident_list() #void : {String identifier = null; List<String> list = new ArrayList<String>(); }
-{
-    identifier = identifier() list = list_() {
-       if(identifier != null) list.add(identifier);
-       return list;
-    }
-}
-
-List<String> arg_list() #void : {String identifier = null; List<String> list = new ArrayList<String>(); }
-{
-    identifier = identifier() list = list_() {
-       if(identifier != null) list.add(identifier);
-       return list;
-    }
-}
-
-List<String> list_() #void : {String identifier = null; List<String> list = new ArrayList<String>(); }
-{
-    <COMMA> identifier = identifier() list = list_() {
-       if(identifier != null) list.add(identifier);
-       return list;
-    } | {} {
+    )
+    {
+      List<Token> list = popUntil(jjtNodeName[JJTCONDITION]);
+      jjtThis.value = list;
       return list;
     }
 }
 
-void number() : {Token t;}
+List<Token> ident_list() #IdentList:
+{}
 {
-  t = <NUMBER> {jjtThis.value = t.image;}
+  {stack.push(new Token(JJTIDENTLIST, jjtNodeName[JJTIDENTLIST]));}
+  identifier() list_()
+  {
+    List<Token> list = popUntil(jjtNodeName[JJTIDENTLIST]);
+    jjtThis.value = list;
+    return list;
+  }
 }
 
-String identifier() : {Token t;}
+List<Token> arg_list() #ArgList:
+{}
 {
-  t = <IDENTIFIER> {jjtThis.value = t.image; return t.image;}
+  {stack.push(new Token(JJTARGLIST, jjtNodeName[JJTARGLIST]));}
+  identifier() list_()
+  {
+    List<Token> list = popUntil(jjtNodeName[JJTARGLIST]);
+    jjtThis.value = list;
+    return list;
+  }
+}
+
+void list_() :
+{}
+{
+    <COMMA> identifier() list_() | {}
+}
+
+void number() #Number:
+{}
+{
+  <NUMBER>
+  {
+    stack.push(token);
+    jjtThis.value = token;
+  }
+}
+
+Token identifier() #Identifier : {}
+{
+  <IDENTIFIER>
+  {
+    stack.push(token);
+    jjtThis.value = token;
+    return token;
+  }
 }

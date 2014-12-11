@@ -1,5 +1,11 @@
 real square (x:real)
 {
+   var x : int;
+   return x * x;
+}
+
+real square (x:real)
+{
    return x * x;
 }
 
@@ -9,8 +15,12 @@ main
    var a, b, c, d : int;
    var squ : real;
 
+   var test : boolean;
+
+   test := 1+1;
+
    x := 1;
-   
+
    while x <= 10 do
    {
       squ := square (x);
