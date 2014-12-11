@@ -13,13 +13,19 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
   public Object visit(ASTVarDecl node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTconst_decl node, Object data){
+  public Object visit(ASTConstDecl node, Object data){
     return defaultVisit(node, data);
   }
-  public Object visit(ASTFunction node, Object data){
+  public Object visit(ASTFunctionDecl node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTFunctionBody node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTParamList node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTType node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTMain node, Object data){
@@ -29,9 +35,6 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
     return defaultVisit(node, data);
   }
   public Object visit(ASTFunctionCall node, Object data){
-    return defaultVisit(node, data);
-  }
-  public Object visit(ASTEvaluation node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTAddExpr node, Object data){
@@ -44,9 +47,6 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
     return defaultVisit(node, data);
   }
   public Object visit(ASTDivExpr node, Object data){
-    return defaultVisit(node, data);
-  }
-  public Object visit(ASTCondition node, Object data){
     return defaultVisit(node, data);
   }
   public Object visit(ASTIdentList node, Object data){
@@ -62,4 +62,4 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=ef0cb6158f422058f2e61838cd5322ed (do not edit this line) */
+/* JavaCC - OriginalChecksum=34ec03c43efdf55b56a3151204f58c45 (do not edit this line) */

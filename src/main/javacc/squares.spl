@@ -1,14 +1,11 @@
 real square (x:real)
 {
-   var x : int;
-   return x * x;
+   return x;
 }
-
 real square (x:real)
 {
    return x * x;
 }
-
 main
 {
    var x : int;
@@ -17,7 +14,7 @@ main
 
    var test : boolean;
 
-   test := 1+1;
+   test := (1+1) + (1+1);
 
    x := 1;
 

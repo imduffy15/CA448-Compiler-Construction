@@ -4,21 +4,21 @@ public interface SimpLVisitor
   public Object visit(SimpleNode node, Object data);
   public Object visit(ASTProgram node, Object data);
   public Object visit(ASTVarDecl node, Object data);
-  public Object visit(ASTconst_decl node, Object data);
-  public Object visit(ASTFunction node, Object data);
+  public Object visit(ASTConstDecl node, Object data);
+  public Object visit(ASTFunctionDecl node, Object data);
+  public Object visit(ASTFunctionBody node, Object data);
   public Object visit(ASTParamList node, Object data);
+  public Object visit(ASTType node, Object data);
   public Object visit(ASTMain node, Object data);
   public Object visit(ASTAssignment node, Object data);
   public Object visit(ASTFunctionCall node, Object data);
-  public Object visit(ASTEvaluation node, Object data);
   public Object visit(ASTAddExpr node, Object data);
   public Object visit(ASTSubExpr node, Object data);
   public Object visit(ASTMultExpr node, Object data);
   public Object visit(ASTDivExpr node, Object data);
-  public Object visit(ASTCondition node, Object data);
   public Object visit(ASTIdentList node, Object data);
   public Object visit(ASTArgList node, Object data);
   public Object visit(ASTNumber node, Object data);
   public Object visit(ASTIdentifier node, Object data);
 }
-/* JavaCC - OriginalChecksum=cc8bb05bc25108f018eabb6647fb3fa8 (do not edit this line) */
+/* JavaCC - OriginalChecksum=84639acdcd35af8319f9bdec115caa8f (do not edit this line) */
