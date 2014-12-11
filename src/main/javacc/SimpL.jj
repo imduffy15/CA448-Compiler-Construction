@@ -576,43 +576,43 @@ void expression() :
 void addSubExpression() :
 {}
 {
-    <ADD> expression() addSubExpression()/*@bgen(jjtree) #AddExpr( 2) */
-                                          {
-                                            ASTAddExpr jjtn001 = new ASTAddExpr(JJTADDEXPR);
-                                            boolean jjtc001 = true;
-                                            jjtree.openNodeScope(jjtn001);
-                                          }
-                                          try {
+    <ADD> expression()/*@bgen(jjtree) #AddExpr( 2) */
+                       {
+                         ASTAddExpr jjtn001 = new ASTAddExpr(JJTADDEXPR);
+                         boolean jjtc001 = true;
+                         jjtree.openNodeScope(jjtn001);
+                       }
+                       try {
 /*@egen*//*@bgen(jjtree)*/
-                                          {
-                                            jjtree.closeNodeScope(jjtn001,  2);
-                                            jjtc001 = false;
-                                          }
+                       {
+                         jjtree.closeNodeScope(jjtn001,  2);
+                         jjtc001 = false;
+                       }
 /*@egen*/ {jjtn001.value = new Token(ADD, tokenImage[ADD]);}/*@bgen(jjtree)*/
-                                          } finally {
-                                            if (jjtc001) {
-                                              jjtree.closeNodeScope(jjtn001,  2);
-                                            }
-                                          }
+                       } finally {
+                         if (jjtc001) {
+                           jjtree.closeNodeScope(jjtn001,  2);
+                         }
+                       }
 /*@egen*/             
-    | <SUB> expression() addSubExpression()/*@bgen(jjtree) #SubExpr( 2) */
-                                            {
-                                              ASTSubExpr jjtn002 = new ASTSubExpr(JJTSUBEXPR);
-                                              boolean jjtc002 = true;
-                                              jjtree.openNodeScope(jjtn002);
-                                            }
-                                            try {
+    | <SUB> expression()/*@bgen(jjtree) #SubExpr( 2) */
+                         {
+                           ASTSubExpr jjtn002 = new ASTSubExpr(JJTSUBEXPR);
+                           boolean jjtc002 = true;
+                           jjtree.openNodeScope(jjtn002);
+                         }
+                         try {
 /*@egen*//*@bgen(jjtree)*/
-                                            {
-                                              jjtree.closeNodeScope(jjtn002,  2);
-                                              jjtc002 = false;
-                                            }
+                         {
+                           jjtree.closeNodeScope(jjtn002,  2);
+                           jjtc002 = false;
+                         }
 /*@egen*/ {jjtn002.value = new Token(SUB, tokenImage[SUB]);}/*@bgen(jjtree)*/
-                                            } finally {
-                                              if (jjtc002) {
-                                                jjtree.closeNodeScope(jjtn002,  2);
-                                              }
-                                            }
+                         } finally {
+                           if (jjtc002) {
+                             jjtree.closeNodeScope(jjtn002,  2);
+                           }
+                         }
 /*@egen*/            
     | {}
 }
@@ -620,49 +620,68 @@ void addSubExpression() :
 void term() :
 {}
 {
-  fragment() multDivExpression()
+  fragment() multDivModExpression()
 }
 
-void multDivExpression() :
+void multDivModExpression() :
 {}
 {
-  <MULT> term() multDivExpression()/*@bgen(jjtree) #MultExpr( 2) */
-                                    {
-                                      ASTMultExpr jjtn001 = new ASTMultExpr(JJTMULTEXPR);
-                                      boolean jjtc001 = true;
-                                      jjtree.openNodeScope(jjtn001);
-                                    }
-                                    try {
+  <MULT> expression()/*@bgen(jjtree) #MultExpr( 2) */
+                      {
+                        ASTMultExpr jjtn001 = new ASTMultExpr(JJTMULTEXPR);
+                        boolean jjtc001 = true;
+                        jjtree.openNodeScope(jjtn001);
+                      }
+                      try {
 /*@egen*//*@bgen(jjtree)*/
-                                    {
-                                      jjtree.closeNodeScope(jjtn001,  2);
-                                      jjtc001 = false;
-                                    }
+                      {
+                        jjtree.closeNodeScope(jjtn001,  2);
+                        jjtc001 = false;
+                      }
 /*@egen*/ {jjtn001.value = new Token(MULT, tokenImage[MULT]);}/*@bgen(jjtree)*/
-                                    } finally {
-                                      if (jjtc001) {
-                                        jjtree.closeNodeScope(jjtn001,  2);
-                                      }
-                                    }
+                      } finally {
+                        if (jjtc001) {
+                          jjtree.closeNodeScope(jjtn001,  2);
+                        }
+                      }
 /*@egen*/             
-  | <DIV> term() multDivExpression()/*@bgen(jjtree) #DivExpr( 2) */
-                                     {
-                                       ASTDivExpr jjtn002 = new ASTDivExpr(JJTDIVEXPR);
-                                       boolean jjtc002 = true;
-                                       jjtree.openNodeScope(jjtn002);
-                                     }
-                                     try {
+  | <DIV> expression()/*@bgen(jjtree) #DivExpr( 2) */
+                       {
+                         ASTDivExpr jjtn002 = new ASTDivExpr(JJTDIVEXPR);
+                         boolean jjtc002 = true;
+                         jjtree.openNodeScope(jjtn002);
+                       }
+                       try {
 /*@egen*//*@bgen(jjtree)*/
-                                     {
-                                       jjtree.closeNodeScope(jjtn002,  2);
-                                       jjtc002 = false;
-                                     }
+                       {
+                         jjtree.closeNodeScope(jjtn002,  2);
+                         jjtc002 = false;
+                       }
 /*@egen*/ {jjtn002.value = new Token(DIV, tokenImage[DIV]);}/*@bgen(jjtree)*/
-                                     } finally {
-                                       if (jjtc002) {
-                                         jjtree.closeNodeScope(jjtn002,  2);
-                                       }
-                                     }
+                       } finally {
+                         if (jjtc002) {
+                           jjtree.closeNodeScope(jjtn002,  2);
+                         }
+                       }
+/*@egen*/            
+  | <MOD> expression()/*@bgen(jjtree) #ModExpr( 2) */
+                       {
+                         ASTModExpr jjtn003 = new ASTModExpr(JJTMODEXPR);
+                         boolean jjtc003 = true;
+                         jjtree.openNodeScope(jjtn003);
+                       }
+                       try {
+/*@egen*//*@bgen(jjtree)*/
+                       {
+                         jjtree.closeNodeScope(jjtn003,  2);
+                         jjtc003 = false;
+                       }
+/*@egen*/ {jjtn003.value = new Token(MOD, tokenImage[MOD]);}/*@bgen(jjtree)*/
+                       } finally {
+                         if (jjtc003) {
+                           jjtree.closeNodeScope(jjtn003,  2);
+                         }
+                       }
 /*@egen*/            
   | {}
 }
@@ -672,9 +691,10 @@ void fragment() :
 {
   identifier()
   | number()
+  | <TRUE>
+  | <FALSE>
   | <ADD> fragment()
   | <SUB> fragment()
-  | <LPAREN> expression() <RPAREN>
 }
 
 void condition() :
@@ -726,7 +746,12 @@ void arg_list()          :
 {/*@bgen(jjtree) ArgList */
   try {
 /*@egen*/
-  identifier() list_()/*@bgen(jjtree)*/
+  (identifier() list_()) |/*@bgen(jjtree)*/
+                           {
+                             jjtree.closeNodeScope(jjtn000, true);
+                             jjtc000 = false;
+                           }
+/*@egen*/ {}/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);

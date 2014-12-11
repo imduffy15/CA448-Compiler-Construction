@@ -157,7 +157,7 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 		List<Token> paramList = new ArrayList();
 
 		for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-			paramList.add((Token) node.jjtGetChild(i).jjtAccept(this, data));
+			paramList.add((Token) ((SimpleNode)node.jjtGetChild(i)).jjtGetValue());
 		}
 
 		return paramList;
@@ -193,8 +193,18 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 		HashMap<String, STC> scopedSymbolTable = symbolTable.get(scope);
 
 		STC scopedVariable = scopedSymbolTable.get(identifier.image);
-		scopedVariable.addData("written", true);
-		scopedVariable.addData("value", assignment);
+		if(scopedVariable != null) {
+			scopedVariable.addData("written", true);
+			scopedVariable.addData("value", assignment);
+		}
+
+		HashMap<String, STC> globalSymbolTable = symbolTable.get("global");
+
+		STC globalVariable = globalSymbolTable.get(identifier.image);
+		if(globalVariable != null) {
+			globalVariable.addData("written", true);
+			globalVariable.addData("value", assignment);
+		}
 
 
 		return null;
@@ -251,6 +261,11 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 	}
 
 	@Override
+	public Object visit(ASTModExpr node, Object data) {
+		return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetValue(), node.jjtGetChild(1).jjtAccept(this, data));
+	}
+
+	@Override
 	public Object visit(ASTIdentList node, Object data) {
 		List<Token> identList = new ArrayList();
 
@@ -266,7 +281,7 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 		List<Token> argList = new ArrayList();
 
 		for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-			argList.add((Token) node.jjtGetChild(i).jjtAccept(this, data));
+			argList.add((Token) ((SimpleNode)node.jjtGetChild(i)).jjtGetValue());
 		}
 
 		return argList;

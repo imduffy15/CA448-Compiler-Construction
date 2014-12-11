@@ -291,22 +291,23 @@ void expression() :
 void addSubExpression() :
 {}
 {
-    <ADD> expression() addSubExpression() {jjtThis.value = new Token(ADD, tokenImage[ADD]);}  #AddExpr(2)
-    | <SUB> expression() addSubExpression() {jjtThis.value = new Token(SUB, tokenImage[SUB]);} #SubExpr(2)
+    <ADD> expression() {jjtThis.value = new Token(ADD, tokenImage[ADD]);}  #AddExpr(2)
+    | <SUB> expression() {jjtThis.value = new Token(SUB, tokenImage[SUB]);} #SubExpr(2)
     | {}
 }
 
 void term() :
 {}
 {
-  fragment() multDivExpression()
+  fragment() multDivModExpression()
 }
 
-void multDivExpression() :
+void multDivModExpression() :
 {}
 {
-  <MULT> term() multDivExpression() {jjtThis.value = new Token(MULT, tokenImage[MULT]);} #MultExpr(2)
-  | <DIV> term() multDivExpression() {jjtThis.value = new Token(DIV, tokenImage[DIV]);} #DivExpr(2)
+  <MULT> expression() {jjtThis.value = new Token(MULT, tokenImage[MULT]);} #MultExpr(2)
+  | <DIV> expression() {jjtThis.value = new Token(DIV, tokenImage[DIV]);} #DivExpr(2)
+  | <MOD> expression() {jjtThis.value = new Token(MOD, tokenImage[MOD]);} #ModExpr(2)
   | {}
 }
 
@@ -315,9 +316,10 @@ void fragment() :
 {
   identifier()
   | number()
+  | <TRUE>
+  | <FALSE>
   | <ADD> fragment()
   | <SUB> fragment()
-  | <LPAREN> expression() <RPAREN>
 }
 
 void condition() :
@@ -337,7 +339,7 @@ void ident_list() #IdentList :
 void arg_list() #ArgList :
 {}
 {
-  identifier() list_()
+  (identifier() list_()) | {}
 }
 
 void list_() :

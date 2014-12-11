@@ -16,9 +16,10 @@ public interface SimpLVisitor
   public Object visit(ASTSubExpr node, Object data);
   public Object visit(ASTMultExpr node, Object data);
   public Object visit(ASTDivExpr node, Object data);
+  public Object visit(ASTModExpr node, Object data);
   public Object visit(ASTIdentList node, Object data);
   public Object visit(ASTArgList node, Object data);
   public Object visit(ASTNumber node, Object data);
   public Object visit(ASTIdentifier node, Object data);
 }
-/* JavaCC - OriginalChecksum=84639acdcd35af8319f9bdec115caa8f (do not edit this line) */
+/* JavaCC - OriginalChecksum=473a34fe4fd201b2c260dbe3fe3d09b9 (do not edit this line) */

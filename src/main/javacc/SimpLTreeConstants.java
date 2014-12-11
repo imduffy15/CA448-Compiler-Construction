@@ -16,10 +16,11 @@ public interface SimpLTreeConstants
   public int JJTSUBEXPR = 12;
   public int JJTMULTEXPR = 13;
   public int JJTDIVEXPR = 14;
-  public int JJTIDENTLIST = 15;
-  public int JJTARGLIST = 16;
-  public int JJTNUMBER = 17;
-  public int JJTIDENTIFIER = 18;
+  public int JJTMODEXPR = 15;
+  public int JJTIDENTLIST = 16;
+  public int JJTARGLIST = 17;
+  public int JJTNUMBER = 18;
+  public int JJTIDENTIFIER = 19;
 
 
   public String[] jjtNodeName = {
@@ -38,10 +39,11 @@ public interface SimpLTreeConstants
     "SubExpr",
     "MultExpr",
     "DivExpr",
+    "ModExpr",
     "IdentList",
     "ArgList",
     "Number",
     "Identifier",
   };
 }
-/* JavaCC - OriginalChecksum=3a4e9df11e9aedba2fda548383d1ebaa (do not edit this line) */
+/* JavaCC - OriginalChecksum=38fd52772775f651ecddf3f6c1438798 (do not edit this line) */
