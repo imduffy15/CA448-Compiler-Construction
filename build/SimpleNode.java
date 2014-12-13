@@ -73,7 +73,7 @@ class SimpleNode implements Node {
      you need to do. */
 
   public String toString() {
-    return SimpLTreeConstants.jjtNodeName[id] + " " + value;
+    return SimpLTreeConstants.jjtNodeName[id];
   }
   public String toString(String prefix) { return prefix + toString(); }
 

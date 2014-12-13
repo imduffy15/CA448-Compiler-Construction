@@ -52,6 +52,15 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
   public Object visit(ASTModExpr node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTAddFrag node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTSubFrag node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTCondition node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTIdentList node, Object data){
     return defaultVisit(node, data);
   }
@@ -61,8 +70,14 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
   public Object visit(ASTNumber node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTString node, Object data){
+    return defaultVisit(node, data);
+  }
+  public Object visit(ASTBoolean node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTIdentifier node, Object data){
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=efaf9211f25d66680e26b74dc6e317ad (do not edit this line) */
+/* JavaCC - OriginalChecksum=07e90ba4e8be0dea66c7cc7fcfc81306 (do not edit this line) */

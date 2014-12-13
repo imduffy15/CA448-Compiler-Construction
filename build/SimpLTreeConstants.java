@@ -17,10 +17,15 @@ public interface SimpLTreeConstants
   public int JJTMULTEXPR = 13;
   public int JJTDIVEXPR = 14;
   public int JJTMODEXPR = 15;
-  public int JJTIDENTLIST = 16;
-  public int JJTARGLIST = 17;
-  public int JJTNUMBER = 18;
-  public int JJTIDENTIFIER = 19;
+  public int JJTADDFRAG = 16;
+  public int JJTSUBFRAG = 17;
+  public int JJTCONDITION = 18;
+  public int JJTIDENTLIST = 19;
+  public int JJTARGLIST = 20;
+  public int JJTNUMBER = 21;
+  public int JJTSTRING = 22;
+  public int JJTBOOLEAN = 23;
+  public int JJTIDENTIFIER = 24;
 
 
   public String[] jjtNodeName = {
@@ -40,10 +45,15 @@ public interface SimpLTreeConstants
     "MultExpr",
     "DivExpr",
     "ModExpr",
+    "AddFrag",
+    "SubFrag",
+    "Condition",
     "IdentList",
     "ArgList",
     "Number",
+    "String",
+    "Boolean",
     "Identifier",
   };
 }
-/* JavaCC - OriginalChecksum=38fd52772775f651ecddf3f6c1438798 (do not edit this line) */
+/* JavaCC - OriginalChecksum=a15245cd66934f8a95102d7acf98400e (do not edit this line) */

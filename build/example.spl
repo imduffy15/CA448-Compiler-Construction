@@ -9,10 +9,10 @@ int multiply ()
    z := 0;
    while arg_2 > 0 do
    {
-      if (z%2 != 0) then z := z + arg_1 else {};
+      if z%2 != 0 then z := z + arg_1 else {};
       arg_1 := 2*arg_1;
       arg_2 := arg_2/2;
-   }
+   };
 
    return z;
 }
@@ -37,8 +37,8 @@ void divide ()
       }
       else
       {
-      }
-   }
+      };
+   };
 
    return;
 }
@@ -50,26 +50,27 @@ int gcd()
 
    f := x; g := y;
    while f != g do
-   }
+   {
       if f < g then g := g - f else {};
       if g < f then f := f - g else {};
-   }
-   z := f
+   };
+   z := f;
 
    return z;
 }
 
 
-int fact (a:int);
+int fact (a:int)
 {
-   var f:int;
+   var f, g :int;
 
    f := 1;
    if a > 1 then
    {
-      f := a* fact (a-1);
+      g := a-1;
+      f := a* fact (g);
    }
-   else {}
+   else {};
 
    return f;
 }

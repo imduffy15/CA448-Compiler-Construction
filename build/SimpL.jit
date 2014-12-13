@@ -271,7 +271,7 @@ void statement() :
 void assignment() #Assignment :
 {}
 {
-	identifier() <ASSIGN> ( expression() | <STRINGS> )
+	identifier() <ASSIGN> ( expression() | string() )
 }
 
 void functionCall() #FunctionCall :
@@ -284,7 +284,7 @@ void expression() :
 {}
 {
     LOOKAHEAD(2)
-	functionCall()
+    functionCall()
     | term() addSubExpression()
 }
 
@@ -305,9 +305,9 @@ void term() :
 void multDivModExpression() :
 {}
 {
-  <MULT> expression() {jjtThis.value = new Token(MULT, tokenImage[MULT]);} #MultExpr(2)
-  | <DIV> expression() {jjtThis.value = new Token(DIV, tokenImage[DIV]);} #DivExpr(2)
-  | <MOD> expression() {jjtThis.value = new Token(MOD, tokenImage[MOD]);} #ModExpr(2)
+  <MULT> expression() #MultExpr(2)
+  | <DIV> expression() #DivExpr(2)
+  | <MOD> expression() #ModExpr(2)
   | {}
 }
 
@@ -316,13 +316,12 @@ void fragment() :
 {
   identifier()
   | number()
-  | <TRUE>
-  | <FALSE>
-  | <ADD> fragment()
-  | <SUB> fragment()
+  | bool()
+  | <ADD> fragment() #AddFrag
+  | <SUB> fragment() #SubFrag
 }
 
-void condition() :
+void condition() #Condition:
 {}
 {
     (<NOT>expression()
@@ -352,6 +351,28 @@ void number() #Number :
 {}
 {
   <NUMBER>
+  {
+    jjtThis.value = token;
+  }
+}
+
+void string() #String :
+{}
+{
+  <STRINGS>
+  {
+    jjtThis.value = token;
+  }
+}
+
+void bool() #Boolean :
+{}
+{
+  <TRUE>
+  {
+    jjtThis.value = token;
+  }
+  | <FALSE>
   {
     jjtThis.value = token;
   }

@@ -1,0 +1,388 @@
+/**
+ *
+ * CA448 Compiler Construction
+ * Assignment 2: A Lexical Analyser for the simpL Language
+ *
+ * This project is my own work. I have not recieved assistance beyond what is
+ * normal, and we have cited any sources from which I have borrowed. I have
+ * not given a copy of our work, or a part of our work, to anyone. I are aware
+ * that copying or giving a copy may have serious consequences.
+ *
+ *  Reference: https://javacc.java.net/doc/JavaCC.html
+ *
+ *  @author Ian Duffy, 11356066
+ *
+ */
+
+options
+{
+   IGNORE_CASE = false;
+   MULTI=true;
+   VISITOR=true;
+   NODE_DEFAULT_VOID=true;
+}
+
+
+PARSER_BEGIN(SimpL)
+
+import java.util.*;
+
+class SimpL {
+
+    public static void main(String[] args) throws ParseException {
+
+      SimpL parser = new SimpL(System.in);
+      ASTProgram program = parser.program();
+
+      System.out.println("Abstract Syntax Tree:");
+
+      program.dump(" ");
+
+	  System.out.println();
+	  System.out.println("Semantic Checker:");
+	  SemanticCheckVisitor semanticCheckVisitor = new SemanticCheckVisitor();
+	  program.jjtAccept(semanticCheckVisitor, null);
+
+    }
+}
+
+PARSER_END(SimpL)
+
+TOKEN_MGR_DECLS :
+{
+    static int commentNesting = 0;
+}
+
+// Skip whitespace.
+SKIP :
+{
+    " "
+    | "\n"
+    | "\t"
+    | "\b"
+    | "\r"
+    | "\f"
+}
+
+// Skip comments.
+SKIP :
+{
+    < "--" (~["\r", "\n"]) *>
+    | <"/*"> {commentNesting++; } : MULTILINE_COMMENT_STATE
+}
+
+// Handle multiline comments.
+<MULTILINE_COMMENT_STATE> SKIP :
+{
+    <"/*"> {
+        commentNesting++;
+    }
+    | "*/" {
+        commentNesting--;
+        if(commentNesting == 0) SwitchTo(DEFAULT);
+      }
+    | <~[] >
+}
+
+
+TOKEN :
+{
+    <LPAREN: "(">
+    | <RPAREN: ")">
+    | <LBRACE: "{">
+    | <RBRACE: "}">
+    | <COMMA: ",">
+    | <SEMICOLON: ";">
+    | <COLON: ":">
+    | <DOT: ".">
+    | <ASSIGN: ":=">
+    | <QUESTION: "?">
+    | <EXCLAMATION: "!">
+}
+
+TOKEN :
+{
+    <ADD: "+">
+    | <SUB: "-">
+    | <MULT: "*">
+    | <DIV: "/">
+    | <MOD: "%">
+    | <EQ: "=">
+    | <NOTEQ: "!=">
+    | <LT: "<">
+    | <GT: ">">
+    | <LE: "<=">
+    | <GE: ">=">
+}
+
+TOKEN :
+{
+    < AND : "and" >
+    | < BOOL : "boolean" >
+    | < CONST : "const" >
+    | < DO : "do" >
+    | < ELSE : "else" >
+    | < FALSE : "false" >
+    | < IF : "if" >
+    | < INT : "int" >
+    | < MAIN : "main" >
+    | < NOT : "not" >
+    | < OR : "or" >
+    | < REAL : "real" >
+    | < RETURN : "return" >
+    | < STRING : "string" >
+    | < THEN : "then" >
+    | < TRUE : "true" >
+    | < VAR : "var" >
+    | < VOID : "void" >
+    | < WHILE : "while" >
+}
+
+TOKEN :
+{
+    < NUMBER : <DIGITS> | <DIGITS> "." <DIGITS>>
+    | < IDENTIFIER : (<LETTER>)(<DIGIT> | <LETTER> | <UNDERSCORE>)*>
+    | <STRINGS: "\"" (~["\"","\\","\n","\r"] | "\\" (["n","t","b","r","f","\\","\'","\""] | ["0"-"7"] (["0"-"7"])? | ["0"-"3"] ["0"-"7"] ["0"-"7"]))* "\"">
+}
+
+TOKEN :
+{
+    < #DIGIT : (["0" - "9"]) >
+    | < #DIGITS : (<DIGIT>)+ >
+    | < #LETTER : (["a" - "z", "A" - "Z"]) >
+    | < #LETTERS : (<LETTER>)+ >
+    | < #UNDERSCORE : ("_") >
+}
+
+TOKEN :
+{
+    <OTHER : ~[]>
+}
+
+
+ASTProgram program() #Program:
+{}
+{
+    (
+        (decl())*
+        (function())*
+        (main_prog())
+    ) <EOF>
+    {
+      return jjtThis;
+    }
+}
+
+void decl() :
+{}
+{
+    (
+        var_decl()
+        | const_decl()
+    )
+}
+
+void var_decl() #VarDecl :
+{}
+{
+    <VAR> ident_list() <COLON> type() (<COMMA> ident_list() <COLON> type()
+    )* <SEMICOLON>
+}
+
+void const_decl() #ConstDecl :
+{}
+{
+    <CONST> identifier() <COLON> type() <EQ> expression() (<COMMA> identifier() <COLON> type() <EQ> expression())* <SEMICOLON>
+}
+
+void function() #FunctionDecl :
+{}
+{
+    type() identifier() <LPAREN> param_list() <RPAREN>
+	functionBody()
+}
+
+void functionBody() #FunctionBody :
+{}
+{
+    <LBRACE>
+    	(decl())*
+    	(statement() <SEMICOLON> )*
+    	<RETURN> (expression() | {}) <SEMICOLON>
+    <RBRACE>
+}
+
+void param_list() #ParamList :
+{}
+{
+    (identifier() <COLON> type() ( <COMMA> identifier() <COLON> type())* | {})
+}
+
+void type() #Type :
+{}
+{
+    <INT>
+    {
+      jjtThis.value = token;
+    }
+
+    | <BOOL>
+    {
+      jjtThis.value = token;
+    }
+
+    | <REAL>
+    {
+      jjtThis.value = token;
+    }
+
+    | <STRING>
+    {
+      jjtThis.value = token;
+    }
+
+
+    | <VOID>
+    {
+      jjtThis.value = token;
+    }
+}
+
+void main_prog() #Main :
+{}
+{
+    <MAIN><LBRACE>(decl())*(statement()<SEMICOLON>)*<RBRACE>
+}
+
+void statement() :
+{}
+{
+	LOOKAHEAD(2)
+	assignment()
+	| functionCall()
+    | <EXCLAMATION> expression()
+    | <QUESTION> identifier()
+    | <LBRACE>(statement() <SEMICOLON> )*<RBRACE>
+    | <IF> condition() <THEN> statement() <ELSE> statement()
+    | <WHILE> condition() <DO> statement()
+    | {}
+}
+
+void assignment() #Assignment :
+{}
+{
+	identifier() <ASSIGN> ( expression() | string() )
+}
+
+void functionCall() #FunctionCall :
+{}
+{
+	identifier() <LPAREN> arg_list() <RPAREN>
+}
+
+void expression() :
+{}
+{
+    LOOKAHEAD(2)
+    functionCall()
+    | term() addSubExpression()
+}
+
+void addSubExpression() :
+{}
+{
+    <ADD> expression() {jjtThis.value = new Token(ADD, tokenImage[ADD]);}  #AddExpr(2)
+    | <SUB> expression() {jjtThis.value = new Token(SUB, tokenImage[SUB]);} #SubExpr(2)
+    | {}
+}
+
+void term() :
+{}
+{
+  fragment() multDivModExpression()
+}
+
+void multDivModExpression() :
+{}
+{
+  <MULT> expression() #MultExpr(2)
+  | <DIV> expression() #DivExpr(2)
+  | <MOD> expression() #ModExpr(2)
+  | {}
+}
+
+void fragment() :
+{}
+{
+  identifier()
+  | number()
+  | bool()
+  | <ADD> fragment() #AddFrag
+  | <SUB> fragment() #SubFrag
+}
+
+void condition() #Condition:
+{}
+{
+    (<NOT>expression()
+    | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
+    )
+}
+
+void ident_list() #IdentList :
+{}
+{
+  identifier() list_()
+}
+
+void arg_list() #ArgList :
+{}
+{
+  (identifier() list_()) | {}
+}
+
+void list_() :
+{}
+{
+    <COMMA> identifier() list_() | {}
+}
+
+void number() #Number :
+{}
+{
+  <NUMBER>
+  {
+    jjtThis.value = token;
+  }
+}
+
+void string() #String :
+{}
+{
+  <STRINGS>
+  {
+    jjtThis.value = token;
+  }
+}
+
+void bool() #Boolean :
+{}
+{
+  <TRUE>
+  {
+    jjtThis.value = token;
+  }
+  | <FALSE>
+  {
+    jjtThis.value = token;
+  }
+}
+
+void identifier() #Identifier :
+{}
+{
+  <IDENTIFIER>
+  {
+    jjtThis.value = token;
+  }
+}
