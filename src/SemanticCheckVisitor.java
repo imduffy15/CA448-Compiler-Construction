@@ -282,10 +282,11 @@ public class SemanticCheckVisitor implements SimpLVisitor {
                 calledFunctions.add(identifier.image);
                 if (null != possibleFunction.getData("paramList")) {
                     List<Token> paramList = (List<Token>) possibleFunction.getData("paramList");
-                    if (paramList.size() > 0) {
-                        if (paramList.size() / 2 != arguments.size()) {
-                            System.out.println("Error: incorrect number of function arguments");
-                        }
+                    // paramList holds (identifier, type) pairs, so it has two entries per parameter.
+                    int expected = paramList.size() / 2;
+                    if (expected != arguments.size()) {
+                        System.out.println("Error: incorrect number of function arguments for " + identifier.image
+                                + ": expected " + expected + ", got " + arguments.size());
                     }
                 }
             } else {
