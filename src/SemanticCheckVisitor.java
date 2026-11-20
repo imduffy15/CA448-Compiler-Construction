@@ -150,17 +150,18 @@ public class SemanticCheckVisitor implements SimpLVisitor {
         scope = "function-" + ++scopeCounter;
         symbolTable.put(scope, new HashMap<String, STC>());
 
-        for (int i = 0; i < paramList.size() - 1; ) {
+        // paramList holds (identifier, type) pairs: step over both entries each time.
+        for (int i = 0; i + 1 < paramList.size(); i += 2) {
             HashMap<String, STC> functionSymbolTable = symbolTable.get(scope);
             Token paramIdentifier = paramList.get(i);
-            Token paramType = paramList.get(++i);
+            Token paramType = paramList.get(i + 1);
             STC scopedVariable = new STC(paramIdentifier, paramType, scope, DataType.VAR);
             // A parameter is written to by the caller.
             scopedVariable.addData("written", true);
             if (functionSymbolTable == null) functionSymbolTable = new HashMap<>();
 
             if (functionSymbolTable.get(paramIdentifier.image) != null) {
-                System.out.println("Error: Identifier " + paramType.image + " already declared in " + scope);
+                System.out.println("Error: Identifier " + paramIdentifier.image + " already declared in " + scope);
             } else {
                 functionSymbolTable.put(paramIdentifier.image, scopedVariable);
                 symbolTable.put(scope, functionSymbolTable);
