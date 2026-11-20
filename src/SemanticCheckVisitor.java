@@ -148,6 +148,7 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 
         oldScope = scope;
         scope = "function-" + ++scopeCounter;
+        symbolTable.put(scope, new HashMap<String, STC>());
 
         for (int i = 0; i < paramList.size() - 1; ) {
             HashMap<String, STC> functionSymbolTable = symbolTable.get(scope);
@@ -195,6 +196,7 @@ public class SemanticCheckVisitor implements SimpLVisitor {
     @Override
     public Object visit(ASTMain node, Object data) {
         scope = "main";
+        symbolTable.put(scope, new HashMap<String, STC>());
         node.childrenAccept(this, data);
         return null;
     }
