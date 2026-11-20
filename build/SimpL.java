@@ -272,7 +272,6 @@ if (jjtc000) {
       }
       jj_consume_token(RETURN);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LPAREN:
       case ADD:
       case SUB:
       case FALSE:
@@ -496,30 +495,7 @@ if (jjtc000) {
         }
       case QUESTION:{
         jj_consume_token(QUESTION);
-ASTInput jjtn001 = new ASTInput(JJTINPUT);
-                   boolean jjtc001 = true;
-                   jjtree.openNodeScope(jjtn001);
-        try {
-          identifier();
-        } catch (Throwable jjte001) {
-if (jjtc001) {
-                     jjtree.clearNodeScope(jjtn001);
-                     jjtc001 = false;
-                   } else {
-                     jjtree.popNode();
-                   }
-                   if (jjte001 instanceof RuntimeException) {
-                     {if (true) throw (RuntimeException)jjte001;}
-                   }
-                   if (jjte001 instanceof ParseException) {
-                     {if (true) throw (ParseException)jjte001;}
-                   }
-                   {if (true) throw (Error)jjte001;}
-        } finally {
-if (jjtc001) {
-                     jjtree.closeNodeScope(jjtn001,  1);
-                   }
-        }
+        identifier();
         break;
         }
       case LBRACE:{
@@ -578,7 +554,6 @@ if (jjtc001) {
       identifier();
       jj_consume_token(ASSIGN);
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case LPAREN:
       case ADD:
       case SUB:
       case FALSE:
@@ -648,302 +623,390 @@ if (jjtc000) {
     }
   }
 
-// Precedence, lowest to highest: + -, then * / %, then unary + - and primaries.
-// The binary operators are left-associative: a - b - c parses as (a - b) - c.
   static final public void expression() throws ParseException {
-    term();
-    label_11:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case ADD:
-      case SUB:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[16] = jj_gen;
-        break label_11;
-      }
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case ADD:{
-        jj_consume_token(ADD);
-ASTAddExpr jjtn001 = new ASTAddExpr(JJTADDEXPR);
-                boolean jjtc001 = true;
-                jjtree.openNodeScope(jjtn001);
-        try {
-          term();
-        } catch (Throwable jjte001) {
-if (jjtc001) {
-                  jjtree.clearNodeScope(jjtn001);
-                  jjtc001 = false;
-                } else {
-                  jjtree.popNode();
-                }
-                if (jjte001 instanceof RuntimeException) {
-                  {if (true) throw (RuntimeException)jjte001;}
-                }
-                if (jjte001 instanceof ParseException) {
-                  {if (true) throw (ParseException)jjte001;}
-                }
-                {if (true) throw (Error)jjte001;}
-        } finally {
-if (jjtc001) {
-                  jjtree.closeNodeScope(jjtn001,  2);
-                }
-        }
-        break;
-        }
-      case SUB:{
-        jj_consume_token(SUB);
-ASTSubExpr jjtn002 = new ASTSubExpr(JJTSUBEXPR);
-                  boolean jjtc002 = true;
-                  jjtree.openNodeScope(jjtn002);
-        try {
-          term();
-        } catch (Throwable jjte002) {
-if (jjtc002) {
-                    jjtree.clearNodeScope(jjtn002);
-                    jjtc002 = false;
-                  } else {
-                    jjtree.popNode();
-                  }
-                  if (jjte002 instanceof RuntimeException) {
-                    {if (true) throw (RuntimeException)jjte002;}
-                  }
-                  if (jjte002 instanceof ParseException) {
-                    {if (true) throw (ParseException)jjte002;}
-                  }
-                  {if (true) throw (Error)jjte002;}
-        } finally {
-if (jjtc002) {
-                    jjtree.closeNodeScope(jjtn002,  2);
-                  }
-        }
-        break;
-        }
-      default:
-        jj_la1[17] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-  }
-
-  static final public void term() throws ParseException {
-    fragment();
-    label_12:
-    while (true) {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MULT:
-      case DIV:
-      case MOD:{
-        ;
-        break;
-        }
-      default:
-        jj_la1[18] = jj_gen;
-        break label_12;
-      }
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case MULT:{
-        jj_consume_token(MULT);
-ASTMultExpr jjtn001 = new ASTMultExpr(JJTMULTEXPR);
-                 boolean jjtc001 = true;
-                 jjtree.openNodeScope(jjtn001);
-        try {
-          fragment();
-        } catch (Throwable jjte001) {
-if (jjtc001) {
-                   jjtree.clearNodeScope(jjtn001);
-                   jjtc001 = false;
-                 } else {
-                   jjtree.popNode();
-                 }
-                 if (jjte001 instanceof RuntimeException) {
-                   {if (true) throw (RuntimeException)jjte001;}
-                 }
-                 if (jjte001 instanceof ParseException) {
-                   {if (true) throw (ParseException)jjte001;}
-                 }
-                 {if (true) throw (Error)jjte001;}
-        } finally {
-if (jjtc001) {
-                   jjtree.closeNodeScope(jjtn001,  2);
-                 }
-        }
-        break;
-        }
-      case DIV:{
-        jj_consume_token(DIV);
-ASTDivExpr jjtn002 = new ASTDivExpr(JJTDIVEXPR);
-                  boolean jjtc002 = true;
-                  jjtree.openNodeScope(jjtn002);
-        try {
-          fragment();
-        } catch (Throwable jjte002) {
-if (jjtc002) {
-                    jjtree.clearNodeScope(jjtn002);
-                    jjtc002 = false;
-                  } else {
-                    jjtree.popNode();
-                  }
-                  if (jjte002 instanceof RuntimeException) {
-                    {if (true) throw (RuntimeException)jjte002;}
-                  }
-                  if (jjte002 instanceof ParseException) {
-                    {if (true) throw (ParseException)jjte002;}
-                  }
-                  {if (true) throw (Error)jjte002;}
-        } finally {
-if (jjtc002) {
-                    jjtree.closeNodeScope(jjtn002,  2);
-                  }
-        }
-        break;
-        }
-      case MOD:{
-        jj_consume_token(MOD);
-ASTModExpr jjtn003 = new ASTModExpr(JJTMODEXPR);
-                  boolean jjtc003 = true;
-                  jjtree.openNodeScope(jjtn003);
-        try {
-          fragment();
-        } catch (Throwable jjte003) {
-if (jjtc003) {
-                    jjtree.clearNodeScope(jjtn003);
-                    jjtc003 = false;
-                  } else {
-                    jjtree.popNode();
-                  }
-                  if (jjte003 instanceof RuntimeException) {
-                    {if (true) throw (RuntimeException)jjte003;}
-                  }
-                  if (jjte003 instanceof ParseException) {
-                    {if (true) throw (ParseException)jjte003;}
-                  }
-                  {if (true) throw (Error)jjte003;}
-        } finally {
-if (jjtc003) {
-                    jjtree.closeNodeScope(jjtn003,  2);
-                  }
-        }
-        break;
-        }
-      default:
-        jj_la1[19] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-  }
-
-  static final public void fragment() throws ParseException {
     if (jj_2_2(2)) {
       functionCall();
     } else {
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case IDENTIFIER:{
-        identifier();
-        break;
-        }
-      case NUMBER:{
-        number();
-        break;
-        }
-      case FALSE:
-      case TRUE:{
-        bool();
-        break;
-        }
-      case LPAREN:{
-        jj_consume_token(LPAREN);
-        expression();
-        jj_consume_token(RPAREN);
-        break;
-        }
-      case ADD:{
-        jj_consume_token(ADD);
-ASTAddFrag jjtn001 = new ASTAddFrag(JJTADDFRAG);
-              boolean jjtc001 = true;
-              jjtree.openNodeScope(jjtn001);
-        try {
-          fragment();
-        } catch (Throwable jjte001) {
-if (jjtc001) {
-                jjtree.clearNodeScope(jjtn001);
-                jjtc001 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte001 instanceof RuntimeException) {
-                {if (true) throw (RuntimeException)jjte001;}
-              }
-              if (jjte001 instanceof ParseException) {
-                {if (true) throw (ParseException)jjte001;}
-              }
-              {if (true) throw (Error)jjte001;}
-        } finally {
-if (jjtc001) {
-                jjtree.closeNodeScope(jjtn001, true);
-              }
-        }
-        break;
-        }
-      case SUB:{
-        jj_consume_token(SUB);
-ASTSubFrag jjtn002 = new ASTSubFrag(JJTSUBFRAG);
-              boolean jjtc002 = true;
-              jjtree.openNodeScope(jjtn002);
-        try {
-          fragment();
-        } catch (Throwable jjte002) {
-if (jjtc002) {
-                jjtree.clearNodeScope(jjtn002);
-                jjtc002 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte002 instanceof RuntimeException) {
-                {if (true) throw (RuntimeException)jjte002;}
-              }
-              if (jjte002 instanceof ParseException) {
-                {if (true) throw (ParseException)jjte002;}
-              }
-              {if (true) throw (Error)jjte002;}
-        } finally {
-if (jjtc002) {
-                jjtree.closeNodeScope(jjtn002, true);
-              }
-        }
-        break;
-        }
-      default:
-        jj_la1[20] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    }
-  }
-
-  static final public void condition() throws ParseException {/*@bgen(jjtree) Condition */
-  ASTCondition jjtn000 = new ASTCondition(JJTCONDITION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-    try {
-      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case NOT:{
-        jj_consume_token(NOT);
-        expression();
-        break;
-        }
-      case LPAREN:
       case ADD:
       case SUB:
       case FALSE:
       case TRUE:
       case NUMBER:
       case IDENTIFIER:{
+        term();
+        addSubExpression();
+        break;
+        }
+      default:
+        jj_la1[16] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+  }
+
+  static final public void addSubExpression() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case ADD:{
+      jj_consume_token(ADD);
+      expression();
+ASTAddExpr jjtn001 = new ASTAddExpr(JJTADDEXPR);
+                         boolean jjtc001 = true;
+                         jjtree.openNodeScope(jjtn001);
+      try {
+jjtree.closeNodeScope(jjtn001,  2);
+                         jjtc001 = false;
+jjtn001.value = new Token(ADD, tokenImage[ADD]);
+      } finally {
+if (jjtc001) {
+                           jjtree.closeNodeScope(jjtn001,  2);
+                         }
+      }
+      break;
+      }
+    case SUB:{
+      jj_consume_token(SUB);
+      expression();
+ASTSubExpr jjtn002 = new ASTSubExpr(JJTSUBEXPR);
+                           boolean jjtc002 = true;
+                           jjtree.openNodeScope(jjtn002);
+      try {
+jjtree.closeNodeScope(jjtn002,  2);
+                           jjtc002 = false;
+jjtn002.value = new Token(SUB, tokenImage[SUB]);
+      } finally {
+if (jjtc002) {
+                             jjtree.closeNodeScope(jjtn002,  2);
+                           }
+      }
+      break;
+      }
+    default:
+      jj_la1[17] = jj_gen;
+
+    }
+  }
+
+  static final public void term() throws ParseException {
+    fragment();
+    multDivModExpression();
+  }
+
+  static final public void multDivModExpression() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case MULT:{
+      jj_consume_token(MULT);
+ASTMultExpr jjtn001 = new ASTMultExpr(JJTMULTEXPR);
+           boolean jjtc001 = true;
+           jjtree.openNodeScope(jjtn001);
+      try {
         expression();
+      } catch (Throwable jjte001) {
+if (jjtc001) {
+             jjtree.clearNodeScope(jjtn001);
+             jjtc001 = false;
+           } else {
+             jjtree.popNode();
+           }
+           if (jjte001 instanceof RuntimeException) {
+             {if (true) throw (RuntimeException)jjte001;}
+           }
+           if (jjte001 instanceof ParseException) {
+             {if (true) throw (ParseException)jjte001;}
+           }
+           {if (true) throw (Error)jjte001;}
+      } finally {
+if (jjtc001) {
+             jjtree.closeNodeScope(jjtn001,  2);
+           }
+      }
+      break;
+      }
+    case DIV:{
+      jj_consume_token(DIV);
+ASTDivExpr jjtn002 = new ASTDivExpr(JJTDIVEXPR);
+            boolean jjtc002 = true;
+            jjtree.openNodeScope(jjtn002);
+      try {
+        expression();
+      } catch (Throwable jjte002) {
+if (jjtc002) {
+              jjtree.clearNodeScope(jjtn002);
+              jjtc002 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte002 instanceof RuntimeException) {
+              {if (true) throw (RuntimeException)jjte002;}
+            }
+            if (jjte002 instanceof ParseException) {
+              {if (true) throw (ParseException)jjte002;}
+            }
+            {if (true) throw (Error)jjte002;}
+      } finally {
+if (jjtc002) {
+              jjtree.closeNodeScope(jjtn002,  2);
+            }
+      }
+      break;
+      }
+    case MOD:{
+      jj_consume_token(MOD);
+ASTModExpr jjtn003 = new ASTModExpr(JJTMODEXPR);
+            boolean jjtc003 = true;
+            jjtree.openNodeScope(jjtn003);
+      try {
+        expression();
+      } catch (Throwable jjte003) {
+if (jjtc003) {
+              jjtree.clearNodeScope(jjtn003);
+              jjtc003 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte003 instanceof RuntimeException) {
+              {if (true) throw (RuntimeException)jjte003;}
+            }
+            if (jjte003 instanceof ParseException) {
+              {if (true) throw (ParseException)jjte003;}
+            }
+            {if (true) throw (Error)jjte003;}
+      } finally {
+if (jjtc003) {
+              jjtree.closeNodeScope(jjtn003,  2);
+            }
+      }
+      break;
+      }
+    default:
+      jj_la1[18] = jj_gen;
+
+    }
+  }
+
+  static final public void fragment() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case IDENTIFIER:{
+      identifier();
+      break;
+      }
+    case NUMBER:{
+      number();
+      break;
+      }
+    case FALSE:
+    case TRUE:{
+      bool();
+      break;
+      }
+    case ADD:{
+      jj_consume_token(ADD);
+ASTAddFrag jjtn001 = new ASTAddFrag(JJTADDFRAG);
+            boolean jjtc001 = true;
+            jjtree.openNodeScope(jjtn001);
+      try {
+        fragment();
+      } catch (Throwable jjte001) {
+if (jjtc001) {
+              jjtree.clearNodeScope(jjtn001);
+              jjtc001 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte001 instanceof RuntimeException) {
+              {if (true) throw (RuntimeException)jjte001;}
+            }
+            if (jjte001 instanceof ParseException) {
+              {if (true) throw (ParseException)jjte001;}
+            }
+            {if (true) throw (Error)jjte001;}
+      } finally {
+if (jjtc001) {
+              jjtree.closeNodeScope(jjtn001, true);
+            }
+      }
+      break;
+      }
+    case SUB:{
+      jj_consume_token(SUB);
+ASTSubFrag jjtn002 = new ASTSubFrag(JJTSUBFRAG);
+            boolean jjtc002 = true;
+            jjtree.openNodeScope(jjtn002);
+      try {
+        fragment();
+      } catch (Throwable jjte002) {
+if (jjtc002) {
+              jjtree.clearNodeScope(jjtn002);
+              jjtc002 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte002 instanceof RuntimeException) {
+              {if (true) throw (RuntimeException)jjte002;}
+            }
+            if (jjte002 instanceof ParseException) {
+              {if (true) throw (ParseException)jjte002;}
+            }
+            {if (true) throw (Error)jjte002;}
+      } finally {
+if (jjtc002) {
+              jjtree.closeNodeScope(jjtn002, true);
+            }
+      }
+      break;
+      }
+    default:
+      jj_la1[19] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+// Conditions, lowest to highest precedence: or, and, not, comparison.
+  static final public void condition() throws ParseException {
+    andCondition();
+    label_11:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case OR:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[20] = jj_gen;
+        break label_11;
+      }
+      jj_consume_token(OR);
+ASTOr jjtn001 = new ASTOr(JJTOR);
+                            boolean jjtc001 = true;
+                            jjtree.openNodeScope(jjtn001);
+      try {
+        andCondition();
+      } catch (Throwable jjte001) {
+if (jjtc001) {
+                              jjtree.clearNodeScope(jjtn001);
+                              jjtc001 = false;
+                            } else {
+                              jjtree.popNode();
+                            }
+                            if (jjte001 instanceof RuntimeException) {
+                              {if (true) throw (RuntimeException)jjte001;}
+                            }
+                            if (jjte001 instanceof ParseException) {
+                              {if (true) throw (ParseException)jjte001;}
+                            }
+                            {if (true) throw (Error)jjte001;}
+      } finally {
+if (jjtc001) {
+                              jjtree.closeNodeScope(jjtn001,  2);
+                            }
+      }
+    }
+  }
+
+  static final public void andCondition() throws ParseException {
+    notCondition();
+    label_12:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+      case AND:{
+        ;
+        break;
+        }
+      default:
+        jj_la1[21] = jj_gen;
+        break label_12;
+      }
+      jj_consume_token(AND);
+ASTAnd jjtn001 = new ASTAnd(JJTAND);
+                             boolean jjtc001 = true;
+                             jjtree.openNodeScope(jjtn001);
+      try {
+        notCondition();
+      } catch (Throwable jjte001) {
+if (jjtc001) {
+                               jjtree.clearNodeScope(jjtn001);
+                               jjtc001 = false;
+                             } else {
+                               jjtree.popNode();
+                             }
+                             if (jjte001 instanceof RuntimeException) {
+                               {if (true) throw (RuntimeException)jjte001;}
+                             }
+                             if (jjte001 instanceof ParseException) {
+                               {if (true) throw (ParseException)jjte001;}
+                             }
+                             {if (true) throw (Error)jjte001;}
+      } finally {
+if (jjtc001) {
+                               jjtree.closeNodeScope(jjtn001,  2);
+                             }
+      }
+    }
+  }
+
+  static final public void notCondition() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case NOT:{
+      jj_consume_token(NOT);
+ASTNot jjtn001 = new ASTNot(JJTNOT);
+            boolean jjtc001 = true;
+            jjtree.openNodeScope(jjtn001);
+      try {
+        notCondition();
+      } catch (Throwable jjte001) {
+if (jjtc001) {
+              jjtree.clearNodeScope(jjtn001);
+              jjtc001 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte001 instanceof RuntimeException) {
+              {if (true) throw (RuntimeException)jjte001;}
+            }
+            if (jjte001 instanceof ParseException) {
+              {if (true) throw (ParseException)jjte001;}
+            }
+            {if (true) throw (Error)jjte001;}
+      } finally {
+if (jjtc001) {
+              jjtree.closeNodeScope(jjtn001,  1);
+            }
+      }
+      break;
+      }
+    case ADD:
+    case SUB:
+    case FALSE:
+    case TRUE:
+    case NUMBER:
+    case IDENTIFIER:{
+      comparison();
+      break;
+      }
+    default:
+      jj_la1[22] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+// A comparison of two expressions (the operator token is stored as the node's
+// value), or a single expression that must be boolean.
+  static final public void comparison() throws ParseException {Token op;
+    expression();
+    switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+    case EQ:
+    case NOTEQ:
+    case LT:
+    case GT:
+    case LE:
+    case GE:{
+ASTCondition jjtn001 = new ASTCondition(JJTCONDITION);
+          boolean jjtc001 = true;
+          jjtree.openNodeScope(jjtn001);
+      try {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case EQ:{
           jj_consume_token(EQ);
@@ -969,44 +1032,50 @@ if (jjtc002) {
           jj_consume_token(LE);
           break;
           }
-        case AND:{
-          jj_consume_token(AND);
-          break;
-          }
-        case OR:{
-          jj_consume_token(OR);
-          break;
-          }
         default:
-          jj_la1[21] = jj_gen;
+          jj_la1[23] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
+op = token;
         expression();
-        break;
-        }
-      default:
-        jj_la1[22] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
+jjtree.closeNodeScope(jjtn001,  2);
+                                                                                      jjtc001 = false;
+jjtn001.value = op;
+      } catch (Throwable jjte001) {
+if (jjtc001) {
+            jjtree.clearNodeScope(jjtn001);
+            jjtc001 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte001 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte001;}
+          }
+          if (jjte001 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte001;}
+          }
+          {if (true) throw (Error)jjte001;}
+      } finally {
+if (jjtc001) {
+            jjtree.closeNodeScope(jjtn001,  2);
+          }
       }
-    } catch (Throwable jjte000) {
-if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
+      break;
       }
-      if (jjte000 instanceof RuntimeException) {
-        {if (true) throw (RuntimeException)jjte000;}
-      }
-      if (jjte000 instanceof ParseException) {
-        {if (true) throw (ParseException)jjte000;}
-      }
-      {if (true) throw (Error)jjte000;}
-    } finally {
-if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
+    default:
+      jj_la1[24] = jj_gen;
+ASTCondition jjtn002 = new ASTCondition(JJTCONDITION);
+            boolean jjtc002 = true;
+            jjtree.openNodeScope(jjtn002);
+      try {
+jjtree.closeNodeScope(jjtn002,  1);
+            jjtc002 = false;
+
+      } finally {
+if (jjtc002) {
+              jjtree.closeNodeScope(jjtn002,  1);
+            }
       }
     }
   }
@@ -1051,7 +1120,7 @@ if (jjtc000) {
         break;
         }
       default:
-        jj_la1[23] = jj_gen;
+        jj_la1[25] = jj_gen;
 jjtree.closeNodeScope(jjtn000, true);
                              jjtc000 = false;
 
@@ -1086,7 +1155,7 @@ if (jjtc000) {
       break;
       }
     default:
-      jj_la1[24] = jj_gen;
+      jj_la1[26] = jj_gen;
 
     }
   }
@@ -1144,7 +1213,7 @@ jjtn000.value = token;
         break;
         }
       default:
-        jj_la1[25] = jj_gen;
+        jj_la1[27] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1187,12 +1256,6 @@ if (jjtc000) {
     finally { jj_save(1, xla); }
   }
 
-  static private boolean jj_3R_15()
- {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
   static private boolean jj_3R_13()
  {
     if (jj_3R_15()) return true;
@@ -1209,6 +1272,12 @@ if (jjtc000) {
   static private boolean jj_3_1()
  {
     if (jj_3R_13()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_15()
+ {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -1231,7 +1300,7 @@ if (jjtc000) {
   static private Token jj_scanpos, jj_lastpos;
   static private int jj_la;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[26];
+  static final private int[] jj_la1 = new int[28];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -1239,10 +1308,10 @@ if (jjtc000) {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x0,0x0,0x0,0x10000,0x10000,0x0,0x624000,0x1801000,0x10000,0x0,0x0,0x0,0x624000,0x624000,0x604000,0x1801000,0x1800000,0x1800000,0xe000000,0xe000000,0x1801000,0xf0000000,0x1801000,0x0,0x10000,0x0,};
+      jj_la1_0 = new int[] {0x0,0x0,0x0,0x10000,0x10000,0x0,0x624000,0x1800000,0x10000,0x0,0x0,0x0,0x624000,0x624000,0x604000,0x1800000,0x1800000,0x1800000,0xe000000,0x1800000,0x0,0x0,0x1800000,0xf0000000,0xf0000000,0x0,0x10000,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x40010,0x8a208,0x40010,0x0,0x0,0x40010,0x500100,0x620080,0x0,0x400000,0x8a208,0x40010,0x500100,0x500100,0x500100,0xe20080,0x0,0x0,0x0,0x0,0x620080,0x1007,0x620880,0x400000,0x0,0x20080,};
+      jj_la1_1 = new int[] {0x40010,0x8a208,0x40010,0x0,0x0,0x40010,0x500100,0x620080,0x0,0x400000,0x8a208,0x40010,0x500100,0x500100,0x500100,0xe20080,0x620080,0x0,0x0,0x620080,0x1000,0x4,0x620880,0x3,0x3,0x400000,0x0,0x20080,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[2];
   static private boolean jj_rescan = false;
@@ -1266,7 +1335,7 @@ if (jjtc000) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 28; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1282,7 +1351,7 @@ if (jjtc000) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 28; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1300,7 +1369,7 @@ if (jjtc000) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 28; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1320,7 +1389,7 @@ if (jjtc000) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 28; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1337,7 +1406,7 @@ if (jjtc000) {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 28; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1348,7 +1417,7 @@ if (jjtc000) {
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 28; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1479,7 +1548,7 @@ if (jjtc000) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < 28; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

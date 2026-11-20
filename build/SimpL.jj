@@ -817,38 +817,167 @@ void fragment() :
 /*@egen*/         
 }
 
-void condition()           :
-{/*@bgen(jjtree) Condition */
-  ASTCondition jjtn000 = new ASTCondition(JJTCONDITION);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-/*@egen*/}
-{/*@bgen(jjtree) Condition */
-    try {
+// Conditions, lowest to highest precedence: or, and, not, comparison.
+void condition() :
+{}
+{
+    andCondition() ( <OR>/*@bgen(jjtree) #Or( 2) */
+                          {
+                            ASTOr jjtn001 = new ASTOr(JJTOR);
+                            boolean jjtc001 = true;
+                            jjtree.openNodeScope(jjtn001);
+                          }
+                          try {
+/*@egen*/ andCondition()/*@bgen(jjtree)*/
+                          } catch (Throwable jjte001) {
+                            if (jjtc001) {
+                              jjtree.clearNodeScope(jjtn001);
+                              jjtc001 = false;
+                            } else {
+                              jjtree.popNode();
+                            }
+                            if (jjte001 instanceof RuntimeException) {
+                              throw (RuntimeException)jjte001;
+                            }
+                            if (jjte001 instanceof ParseException) {
+                              throw (ParseException)jjte001;
+                            }
+                            throw (Error)jjte001;
+                          } finally {
+                            if (jjtc001) {
+                              jjtree.closeNodeScope(jjtn001,  2);
+                            }
+                          }
+/*@egen*/        )*
+}
+
+void andCondition() :
+{}
+{
+    notCondition() ( <AND>/*@bgen(jjtree) #And( 2) */
+                           {
+                             ASTAnd jjtn001 = new ASTAnd(JJTAND);
+                             boolean jjtc001 = true;
+                             jjtree.openNodeScope(jjtn001);
+                           }
+                           try {
+/*@egen*/ notCondition()/*@bgen(jjtree)*/
+                           } catch (Throwable jjte001) {
+                             if (jjtc001) {
+                               jjtree.clearNodeScope(jjtn001);
+                               jjtc001 = false;
+                             } else {
+                               jjtree.popNode();
+                             }
+                             if (jjte001 instanceof RuntimeException) {
+                               throw (RuntimeException)jjte001;
+                             }
+                             if (jjte001 instanceof ParseException) {
+                               throw (ParseException)jjte001;
+                             }
+                             throw (Error)jjte001;
+                           } finally {
+                             if (jjtc001) {
+                               jjtree.closeNodeScope(jjtn001,  2);
+                             }
+                           }
+/*@egen*/         )*
+}
+
+void notCondition() :
+{}
+{
+    <NOT>/*@bgen(jjtree) #Not( 1) */
+          {
+            ASTNot jjtn001 = new ASTNot(JJTNOT);
+            boolean jjtc001 = true;
+            jjtree.openNodeScope(jjtn001);
+          }
+          try {
+/*@egen*/ notCondition()/*@bgen(jjtree)*/
+          } catch (Throwable jjte001) {
+            if (jjtc001) {
+              jjtree.clearNodeScope(jjtn001);
+              jjtc001 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte001 instanceof RuntimeException) {
+              throw (RuntimeException)jjte001;
+            }
+            if (jjte001 instanceof ParseException) {
+              throw (ParseException)jjte001;
+            }
+            throw (Error)jjte001;
+          } finally {
+            if (jjtc001) {
+              jjtree.closeNodeScope(jjtn001,  1);
+            }
+          }
+/*@egen*/        
+    | comparison()
+}
+
+// A comparison of two expressions (the operator token is stored as the node's
+// value), or a single expression that must be boolean.
+void comparison() :
+{ Token op; }
+{
+    expression()
+    (/*@bgen(jjtree) #Condition( 2) */
+        {
+          ASTCondition jjtn001 = new ASTCondition(JJTCONDITION);
+          boolean jjtc001 = true;
+          jjtree.openNodeScope(jjtn001);
+        }
+        try {
 /*@egen*/
-    (<NOT>expression()
-    | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
-    )/*@bgen(jjtree)*/
-    } catch (Throwable jjte000) {
-      if (jjtc000) {
-        jjtree.clearNodeScope(jjtn000);
-        jjtc000 = false;
-      } else {
-        jjtree.popNode();
-      }
-      if (jjte000 instanceof RuntimeException) {
-        throw (RuntimeException)jjte000;
-      }
-      if (jjte000 instanceof ParseException) {
-        throw (ParseException)jjte000;
-      }
-      throw (Error)jjte000;
-    } finally {
-      if (jjtc000) {
-        jjtree.closeNodeScope(jjtn000, true);
-      }
-    }
-/*@egen*/
+        ( (<EQ> | <NOTEQ> | <LT> | <GT> | <GE> | <LE>) { op = token; } expression()/*@bgen(jjtree)*/
+                                                                                    {
+                                                                                      jjtree.closeNodeScope(jjtn001,  2);
+                                                                                      jjtc001 = false;
+                                                                                    }
+/*@egen*/ { jjtn001.value = op; } )/*@bgen(jjtree)*/
+        } catch (Throwable jjte001) {
+          if (jjtc001) {
+            jjtree.clearNodeScope(jjtn001);
+            jjtc001 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte001 instanceof RuntimeException) {
+            throw (RuntimeException)jjte001;
+          }
+          if (jjte001 instanceof ParseException) {
+            throw (ParseException)jjte001;
+          }
+          throw (Error)jjte001;
+        } finally {
+          if (jjtc001) {
+            jjtree.closeNodeScope(jjtn001,  2);
+          }
+        }
+/*@egen*/              
+        |/*@bgen(jjtree) #Condition( 1) */
+          {
+            ASTCondition jjtn002 = new ASTCondition(JJTCONDITION);
+            boolean jjtc002 = true;
+            jjtree.openNodeScope(jjtn002);
+          }
+          try {
+/*@egen*//*@bgen(jjtree)*/
+          {
+            jjtree.closeNodeScope(jjtn002,  1);
+            jjtc002 = false;
+          }
+/*@egen*/ {}/*@bgen(jjtree)*/
+          } finally {
+            if (jjtc002) {
+              jjtree.closeNodeScope(jjtn002,  1);
+            }
+          }
+/*@egen*/              
+    )
 }
 
 void ident_list()            :

@@ -316,11 +316,35 @@ void fragment() :
     | <SUB> fragment() #SubFrag
 }
 
-void condition() #Condition:
+// Conditions, lowest to highest precedence: or, and, not, comparison.
+void condition() :
 {}
 {
-    (<NOT>expression()
-    | expression() (<EQ>|<NOTEQ>|<LT>|<GT>|<GE>|<LE>|<AND>|<OR>) expression()
+    andCondition() ( <OR> andCondition() #Or(2) )*
+}
+
+void andCondition() :
+{}
+{
+    notCondition() ( <AND> notCondition() #And(2) )*
+}
+
+void notCondition() :
+{}
+{
+    <NOT> notCondition() #Not(1)
+    | comparison()
+}
+
+// A comparison of two expressions (the operator token is stored as the node's
+// value), or a single expression that must be boolean.
+void comparison() :
+{ Token op; }
+{
+    expression()
+    (
+        ( (<EQ> | <NOTEQ> | <LT> | <GT> | <GE> | <LE>) { op = token; } expression() { jjtThis.value = op; } ) #Condition(2)
+        | {} #Condition(1)
     )
 }
 

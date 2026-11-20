@@ -452,11 +452,90 @@ public class SemanticCheckVisitor implements SimpLVisitor {
         return visitArithmeticExpr(node, data);
     }
 
+    private static final int UNKNOWN_TYPE = -1;
+    private static final int NUMERIC_TYPE = -2;
+
+    // The type of a visited operand: a token kind (INT, REAL, BOOL, STRING),
+    // NUMERIC_TYPE for an arithmetic sub-expression, or UNKNOWN_TYPE.
+    private int operandType(Object obj) {
+        if (obj instanceof List) return NUMERIC_TYPE;
+        if (!(obj instanceof Token)) return UNKNOWN_TYPE;
+        Token token = (Token) obj;
+        if (token.kind != SimpLConstants.IDENTIFIER) return token.kind;
+
+        HashMap<String, STC> scopedSymbolTable = symbolTable.get(scope);
+        STC resolved = null;
+        if (scopedSymbolTable != null) resolved = scopedSymbolTable.get(token.image);
+        if (resolved == null) resolved = symbolTable.get(GLOBAL_SCOPE).get(token.image);
+        // Undeclared identifiers are reported by visit(ASTIdentifier).
+        return resolved == null ? UNKNOWN_TYPE : resolved.getType().kind;
+    }
+
+    private boolean isNumeric(int type) {
+        return type == SimpLConstants.INT || type == SimpLConstants.REAL || type == NUMERIC_TYPE;
+    }
+
+    private String describe(Object operand, int type) {
+        String name = operand instanceof Token ? ((Token) operand).image : "expression";
+        String typeName = type == NUMERIC_TYPE ? "numeric" : SimpLConstants.tokenImage[type].replace("\"", "");
+        return name + " (" + typeName + ")";
+    }
+
     @Override
     public Object visit(ASTCondition node, Object data) {
-    	checkArgumentsBooleanOperators(node.jjtGetChild(0).jjtAccept(this, data));
-    	checkArgumentsBooleanOperators(node.jjtGetChild(1).jjtAccept(this, data));
-        return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetChild(1).jjtAccept(this, data));
+        Object left = node.jjtGetChild(0).jjtAccept(this, data);
+        int leftType = operandType(left);
+
+        // A bare expression used as a condition must be boolean.
+        if (node.jjtGetNumChildren() == 1) {
+            checkArgumentsBooleanOperators(left);
+            if (leftType != UNKNOWN_TYPE && leftType != SimpLConstants.BOOL) {
+                System.out.println("Error: condition " + describe(left, leftType) + " must be boolean");
+            }
+            return Arrays.asList(left);
+        }
+
+        Token op = (Token) node.jjtGetValue();
+        Object right = node.jjtGetChild(1).jjtAccept(this, data);
+        int rightType = operandType(right);
+
+        if (op.kind == SimpLConstants.EQ || op.kind == SimpLConstants.NOTEQ) {
+            // = and != need operands of the same type (int and real may be mixed).
+            if (leftType != UNKNOWN_TYPE && rightType != UNKNOWN_TYPE
+                    && !(isNumeric(leftType) && isNumeric(rightType)) && leftType != rightType) {
+                System.out.println("Error: cannot compare " + describe(left, leftType) + " with "
+                        + describe(right, rightType) + " using " + op.image);
+            }
+        } else {
+            // <, >, <=, >= need numeric operands.
+            if (leftType != UNKNOWN_TYPE && !isNumeric(leftType)) {
+                System.out.println("Error: operand " + describe(left, leftType) + " of " + op.image + " must be int or real");
+            }
+            if (rightType != UNKNOWN_TYPE && !isNumeric(rightType)) {
+                System.out.println("Error: operand " + describe(right, rightType) + " of " + op.image + " must be int or real");
+            }
+        }
+
+        return Arrays.asList(left, right);
+    }
+
+    // The operands of and/or/not are always conditions, which are checked when visited.
+    @Override
+    public Object visit(ASTAnd node, Object data) {
+        node.childrenAccept(this, data);
+        return null;
+    }
+
+    @Override
+    public Object visit(ASTOr node, Object data) {
+        node.childrenAccept(this, data);
+        return null;
+    }
+
+    @Override
+    public Object visit(ASTNot node, Object data) {
+        node.childrenAccept(this, data);
+        return null;
     }
 
     @Override
