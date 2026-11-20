@@ -494,7 +494,34 @@ void statement() :
 	assignment()
 	| functionCall()
     | <EXCLAMATION> expression()
-    | <QUESTION> identifier()
+    | <QUESTION>/*@bgen(jjtree) #Input( 1) */
+                 {
+                   ASTInput jjtn001 = new ASTInput(JJTINPUT);
+                   boolean jjtc001 = true;
+                   jjtree.openNodeScope(jjtn001);
+                 }
+                 try {
+/*@egen*/ identifier()/*@bgen(jjtree)*/
+                 } catch (Throwable jjte001) {
+                   if (jjtc001) {
+                     jjtree.clearNodeScope(jjtn001);
+                     jjtc001 = false;
+                   } else {
+                     jjtree.popNode();
+                   }
+                   if (jjte001 instanceof RuntimeException) {
+                     throw (RuntimeException)jjte001;
+                   }
+                   if (jjte001 instanceof ParseException) {
+                     throw (ParseException)jjte001;
+                   }
+                   throw (Error)jjte001;
+                 } finally {
+                   if (jjtc001) {
+                     jjtree.closeNodeScope(jjtn001,  1);
+                   }
+                 }
+/*@egen*/          
     | <LBRACE>(statement() <SEMICOLON> )*<RBRACE>
     | <IF> condition() <THEN> statement() <ELSE> statement()
     | <WHILE> condition() <DO> statement()

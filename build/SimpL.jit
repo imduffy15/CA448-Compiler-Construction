@@ -261,7 +261,7 @@ void statement() :
 	assignment()
 	| functionCall()
     | <EXCLAMATION> expression()
-    | <QUESTION> identifier()
+    | <QUESTION> identifier() #Input(1)
     | <LBRACE>(statement() <SEMICOLON> )*<RBRACE>
     | <IF> condition() <THEN> statement() <ELSE> statement()
     | <WHILE> condition() <DO> statement()

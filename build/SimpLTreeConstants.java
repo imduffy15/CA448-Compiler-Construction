@@ -10,22 +10,23 @@ public interface SimpLTreeConstants
   public int JJTPARAMLIST = 6;
   public int JJTTYPE = 7;
   public int JJTMAIN = 8;
-  public int JJTASSIGNMENT = 9;
-  public int JJTFUNCTIONCALL = 10;
-  public int JJTADDEXPR = 11;
-  public int JJTSUBEXPR = 12;
-  public int JJTMULTEXPR = 13;
-  public int JJTDIVEXPR = 14;
-  public int JJTMODEXPR = 15;
-  public int JJTADDFRAG = 16;
-  public int JJTSUBFRAG = 17;
-  public int JJTCONDITION = 18;
-  public int JJTIDENTLIST = 19;
-  public int JJTARGLIST = 20;
-  public int JJTNUMBER = 21;
-  public int JJTSTRING = 22;
-  public int JJTBOOLEAN = 23;
-  public int JJTIDENTIFIER = 24;
+  public int JJTINPUT = 9;
+  public int JJTASSIGNMENT = 10;
+  public int JJTFUNCTIONCALL = 11;
+  public int JJTADDEXPR = 12;
+  public int JJTSUBEXPR = 13;
+  public int JJTMULTEXPR = 14;
+  public int JJTDIVEXPR = 15;
+  public int JJTMODEXPR = 16;
+  public int JJTADDFRAG = 17;
+  public int JJTSUBFRAG = 18;
+  public int JJTCONDITION = 19;
+  public int JJTIDENTLIST = 20;
+  public int JJTARGLIST = 21;
+  public int JJTNUMBER = 22;
+  public int JJTSTRING = 23;
+  public int JJTBOOLEAN = 24;
+  public int JJTIDENTIFIER = 25;
 
 
   public String[] jjtNodeName = {
@@ -38,6 +39,7 @@ public interface SimpLTreeConstants
     "ParamList",
     "Type",
     "Main",
+    "Input",
     "Assignment",
     "FunctionCall",
     "AddExpr",
@@ -56,4 +58,4 @@ public interface SimpLTreeConstants
     "Identifier",
   };
 }
-/* JavaCC - OriginalChecksum=65f73a308d48c9db5acc81c14390d0b5 (do not edit this line) */
+/* JavaCC - OriginalChecksum=dad4d961f46385fad9635ea2f7a794c7 (do not edit this line) */
