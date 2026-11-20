@@ -25,10 +25,14 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 
         node.childrenAccept(this, data);
 
-        if (declaredFunctions.size() == calledFunctions.size()) {
+        LinkedHashSet<String> uncalledFunctions = new LinkedHashSet<>(declaredFunctions);
+        uncalledFunctions.removeAll(calledFunctions);
+        if (uncalledFunctions.isEmpty()) {
             System.out.println("All functions were called");
         } else {
-            System.out.println("All functions were not called");
+            for (String function : uncalledFunctions) {
+                System.out.println("Error: function " + function + " is declared but never called");
+            }
         }
 
         for (String scope : symbolTable.keySet()) {
