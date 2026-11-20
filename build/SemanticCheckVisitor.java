@@ -355,39 +355,39 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 
     }
 
+    private Object visitArithmeticExpr(SimpleNode node, Object data) {
+        // Visit each operand exactly once. An operand may itself be a nested
+        // expression, in which case it returns a List rather than a Token.
+        Object left = node.jjtGetChild(0).jjtAccept(this, data);
+        Object right = node.jjtGetChild(1).jjtAccept(this, data);
+        checkArgumentsMathOperators(left);
+        checkArgumentsMathOperators(right);
+        return Arrays.asList(left, right);
+    }
+
     @Override
     public Object visit(ASTAddExpr node, Object data) {
-    	checkArgumentsMathOperators(node.jjtGetChild(0).jjtAccept(this, data));
-    	checkArgumentsMathOperators(node.jjtGetChild(1).jjtAccept(this, data));
-        return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetChild(1).jjtAccept(this, data));
+        return visitArithmeticExpr(node, data);
     }
 
     @Override
     public Object visit(ASTSubExpr node, Object data) {
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(0).jjtAccept(this, data));
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(1).jjtAccept(this, data));
-        return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetChild(1).jjtAccept(this, data));
+        return visitArithmeticExpr(node, data);
     }
 
     @Override
     public Object visit(ASTMultExpr node, Object data) {
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(0).jjtAccept(this, data));
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(1).jjtAccept(this, data));
-        return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetChild(1).jjtAccept(this, data));
+        return visitArithmeticExpr(node, data);
     }
 
     @Override
     public Object visit(ASTDivExpr node, Object data) {
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(0).jjtAccept(this, data));
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(1).jjtAccept(this, data));
-        return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetChild(1).jjtAccept(this, data));
+        return visitArithmeticExpr(node, data);
     }
 
     @Override
     public Object visit(ASTModExpr node, Object data) {
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(0).jjtAccept(this, data));
-    	checkArgumentsMathOperators((Token) node.jjtGetChild(1).jjtAccept(this, data));
-        return Arrays.asList(node.jjtGetChild(0).jjtAccept(this, data), node.jjtGetChild(1).jjtAccept(this, data));
+        return visitArithmeticExpr(node, data);
     }
 
     @Override
