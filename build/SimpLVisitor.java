@@ -10,6 +10,7 @@ public interface SimpLVisitor
   public Object visit(ASTParamList node, Object data);
   public Object visit(ASTType node, Object data);
   public Object visit(ASTMain node, Object data);
+  public Object visit(ASTInput node, Object data);
   public Object visit(ASTAssignment node, Object data);
   public Object visit(ASTFunctionCall node, Object data);
   public Object visit(ASTAddExpr node, Object data);
@@ -30,4 +31,4 @@ public interface SimpLVisitor
   public Object visit(ASTBoolean node, Object data);
   public Object visit(ASTIdentifier node, Object data);
 }
-/* JavaCC - OriginalChecksum=3ced03239c3fd2780432c4c766ae4820 (do not edit this line) */
+/* JavaCC - OriginalChecksum=26d742fd22726636a585849d27c51ee2 (do not edit this line) */

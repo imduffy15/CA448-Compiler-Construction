@@ -10,25 +10,26 @@ public interface SimpLTreeConstants
   public int JJTPARAMLIST = 6;
   public int JJTTYPE = 7;
   public int JJTMAIN = 8;
-  public int JJTASSIGNMENT = 9;
-  public int JJTFUNCTIONCALL = 10;
-  public int JJTADDEXPR = 11;
-  public int JJTSUBEXPR = 12;
-  public int JJTMULTEXPR = 13;
-  public int JJTDIVEXPR = 14;
-  public int JJTMODEXPR = 15;
-  public int JJTADDFRAG = 16;
-  public int JJTSUBFRAG = 17;
-  public int JJTOR = 18;
-  public int JJTAND = 19;
-  public int JJTNOT = 20;
-  public int JJTCONDITION = 21;
-  public int JJTIDENTLIST = 22;
-  public int JJTARGLIST = 23;
-  public int JJTNUMBER = 24;
-  public int JJTSTRING = 25;
-  public int JJTBOOLEAN = 26;
-  public int JJTIDENTIFIER = 27;
+  public int JJTINPUT = 9;
+  public int JJTASSIGNMENT = 10;
+  public int JJTFUNCTIONCALL = 11;
+  public int JJTADDEXPR = 12;
+  public int JJTSUBEXPR = 13;
+  public int JJTMULTEXPR = 14;
+  public int JJTDIVEXPR = 15;
+  public int JJTMODEXPR = 16;
+  public int JJTADDFRAG = 17;
+  public int JJTSUBFRAG = 18;
+  public int JJTOR = 19;
+  public int JJTAND = 20;
+  public int JJTNOT = 21;
+  public int JJTCONDITION = 22;
+  public int JJTIDENTLIST = 23;
+  public int JJTARGLIST = 24;
+  public int JJTNUMBER = 25;
+  public int JJTSTRING = 26;
+  public int JJTBOOLEAN = 27;
+  public int JJTIDENTIFIER = 28;
 
 
   public String[] jjtNodeName = {
@@ -41,6 +42,7 @@ public interface SimpLTreeConstants
     "ParamList",
     "Type",
     "Main",
+    "Input",
     "Assignment",
     "FunctionCall",
     "AddExpr",
@@ -62,4 +64,4 @@ public interface SimpLTreeConstants
     "Identifier",
   };
 }
-/* JavaCC - OriginalChecksum=c157224179dbacfe0dafec6ca62f6c8d (do not edit this line) */
+/* JavaCC - OriginalChecksum=92c2b32b9d164a7829805e8856dc9456 (do not edit this line) */

@@ -31,6 +31,9 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
   public Object visit(ASTMain node, Object data){
     return defaultVisit(node, data);
   }
+  public Object visit(ASTInput node, Object data){
+    return defaultVisit(node, data);
+  }
   public Object visit(ASTAssignment node, Object data){
     return defaultVisit(node, data);
   }
@@ -89,4 +92,4 @@ public class SimpLDefaultVisitor implements SimpLVisitor{
     return defaultVisit(node, data);
   }
 }
-/* JavaCC - OriginalChecksum=ec124b8dc7bfd69f62de9dae148d7238 (do not edit this line) */
+/* JavaCC - OriginalChecksum=98769a69776301413b9f50cac576e055 (do not edit this line) */

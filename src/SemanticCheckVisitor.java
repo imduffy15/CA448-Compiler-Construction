@@ -214,11 +214,6 @@ public class SemanticCheckVisitor implements SimpLVisitor {
         // Read the target's token directly. Visiting the Identifier node would mark
         // the variable as "read from" when it is only being written to.
         Token identifier = (Token) ((SimpleNode) node.jjtGetChild(0)).jjtGetValue();
-        HashMap<String, STC> currentSymbolTable = symbolTable.get(scope);
-        if ((currentSymbolTable == null || currentSymbolTable.get(identifier.image) == null)
-                && symbolTable.get(GLOBAL_SCOPE).get(identifier.image) == null) {
-            System.out.println("Error: attempt to use undeclared identifier " + identifier.image);
-        }
 
         List<Token> assignment = null;
 
@@ -241,8 +236,9 @@ public class SemanticCheckVisitor implements SimpLVisitor {
             target = symbolTable.get(GLOBAL_SCOPE).get(identifier.image);
         }
 
-        // An undeclared target has already been reported when its Identifier node was visited.
-        if (target != null) {
+        if (target == null) {
+            System.out.println("Error: attempt to use undeclared identifier " + identifier.image);
+        } else {
             if (target.getKind() != DataType.VAR) {
                 System.out.println("Error: cannot assign to " + identifier.image + ", it is a "
                         + target.getKind().toString().toLowerCase() + " not a variable");
@@ -405,16 +401,6 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 			System.out.println("Error: arithmetic operand " + token.image + " must be int or real but "
 					+ kind + " " + token.image + " is " + symbolTableReference.getType().image);
 		}
-    }
-
-    private Object visitArithmeticExpr(SimpleNode node, Object data) {
-        // Visit each operand exactly once. An operand may itself be a nested
-        // expression, in which case it returns a List rather than a Token.
-        Object left = node.jjtGetChild(0).jjtAccept(this, data);
-        Object right = node.jjtGetChild(1).jjtAccept(this, data);
-        checkArgumentsMathOperators(left);
-        checkArgumentsMathOperators(right);
-        return Arrays.asList(left, right);
     }
 
     private Object visitArithmeticExpr(SimpleNode node, Object data) {
