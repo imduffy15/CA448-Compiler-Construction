@@ -1,2 +1,21 @@
+# Toolchain downloads (JavaCC jar fetched by `mise run javacc`)
 .tools/
+
+# Compiled output (`mise run build`)
 out/
+*.class
+
+# Local mise overrides
+mise.local.toml
+.mise.local.toml
+
+# Editors and IDEs
+.idea/
+*.iml
+.vscode/
+*.swp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
