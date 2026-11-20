@@ -1,0 +1,87 @@
+Abstract Syntax Tree:
+ Program
+  ConstDecl
+   Identifier
+   Type
+   Number
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    Boolean
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Boolean
+   Assignment
+    Identifier
+    AddExpr
+     Identifier
+     Identifier
+   Assignment
+    Identifier
+    MultExpr
+     Identifier
+     Number
+   Assignment
+    Identifier
+    AddExpr
+     Identifier
+     Identifier
+   Assignment
+    Identifier
+    SubExpr
+     Identifier
+     Boolean
+   Assignment
+    Identifier
+    MultExpr
+     Number
+     FunctionCall
+      Identifier
+      ArgList
+
+Semantic Checker:
+i is a variable and int
+c is a const and int
+r is a variable and real
+i is a variable and int
+Error: arithmetic operand b must be int or real but variable b is boolean
+Error: Right hand side of i does not match type int
+i is a variable and int
+Error: arithmetic operand false must be int or real but is boolean
+Error: Right hand side of i does not match type int
+Error: arithmetic operand flag must be int or real but function flag is boolean
+Error: Right hand side of i does not match type int
+All functions were called
+c in scope GLOBAL_SCOPE is written and read from
+r in scope main is written and read from
+b in scope main is written and read from
+i in scope main is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+CONST          int            c              GLOBAL_SCOPE   {readFrom=true, written=true, value=[2]}
+FUNCTION       boolean        flag           GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            real           r              main           {readFrom=true, written=true, value=[r, 2.0]}
+VAR            boolean        b              main           {readFrom=true, written=true, value=[true]}
+VAR            int            i              main           {readFrom=true, written=true, value=[3, flag]}

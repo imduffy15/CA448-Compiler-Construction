@@ -1,0 +1,2 @@
+const k : int = 1 + 2, b : boolean = true, bad : int = false;
+main { var a : int; var c : boolean; a := k; c := b; a := bad; }

@@ -1,0 +1,78 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+    Identifier
+    Type
+   FunctionBody
+    Identifier
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    Number
+  Main
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Number
+      AddExpr
+       Identifier
+       Number
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      FunctionCall
+       Identifier
+       ArgList
+        Identifier
+        Identifier
+      FunctionCall
+       Identifier
+       ArgList
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+
+Semantic Checker:
+x is a variable and int
+Error: incorrect number of function arguments for add: expected 2, got 1
+All functions were called
+x in scope main is written and read from
+y in scope main is written and read from
+a in scope function-1 is written and read from
+b in scope function-1 is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       int            add            GLOBAL_SCOPE   {readFrom=true, paramList=[a, int, b, int]}
+FUNCTION       int            one            GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            int            x              main           {readFrom=true, written=true, value=[1]}
+VAR            int            y              main           {readFrom=true, written=true, value=[one]}
+VAR            int            a              function-1     {readFrom=true, written=true}
+VAR            int            b              function-1     {written=true} 

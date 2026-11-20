@@ -1,0 +1,1 @@
+main { var b : boolean; b := true; while not b do b := false; }

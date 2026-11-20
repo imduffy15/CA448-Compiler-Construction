@@ -1,0 +1,284 @@
+Abstract Syntax Tree:
+ Program
+  VarDecl
+   IdentList
+    Identifier
+    Identifier
+    Identifier
+    Identifier
+    Identifier
+    Identifier
+    Identifier
+   Type
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    VarDecl
+     IdentList
+      Identifier
+      Identifier
+     Type
+    Assignment
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     Number
+    Condition
+     Identifier
+     Number
+    Condition
+     ModExpr
+      Identifier
+      Number
+     Number
+    Assignment
+     Identifier
+     AddExpr
+      Identifier
+      Identifier
+    Assignment
+     Identifier
+     MultExpr
+      Number
+      Identifier
+    Assignment
+     Identifier
+     DivExpr
+      Identifier
+      Number
+    Identifier
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    VarDecl
+     IdentList
+      Identifier
+     Type
+    Assignment
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     Number
+    Assignment
+     Identifier
+     Identifier
+    Condition
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     MultExpr
+      Number
+      Identifier
+    Condition
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     MultExpr
+      Number
+      Identifier
+    Assignment
+     Identifier
+     DivExpr
+      Identifier
+      Number
+    Condition
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     SubExpr
+      Identifier
+      Identifier
+    Assignment
+     Identifier
+     AddExpr
+      Identifier
+      Number
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    VarDecl
+     IdentList
+      Identifier
+      Identifier
+     Type
+    Assignment
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     Identifier
+    Condition
+     Identifier
+     Identifier
+    Condition
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     SubExpr
+      Identifier
+      Identifier
+    Condition
+     Identifier
+     Identifier
+    Assignment
+     Identifier
+     SubExpr
+      Identifier
+      Identifier
+    Assignment
+     Identifier
+     Identifier
+    Identifier
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+   FunctionBody
+    VarDecl
+     IdentList
+      Identifier
+      Identifier
+     Type
+    Assignment
+     Identifier
+     Number
+    Condition
+     Identifier
+     Number
+    Assignment
+     Identifier
+     SubExpr
+      Identifier
+      Number
+    Assignment
+     Identifier
+     MultExpr
+      Identifier
+      FunctionCall
+       Identifier
+       ArgList
+        Identifier
+    Identifier
+  Main
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+    Type
+   Input
+    Identifier
+   Input
+    Identifier
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+   Identifier
+   Input
+    Identifier
+   Input
+    Identifier
+   FunctionCall
+    Identifier
+    ArgList
+   Identifier
+   Identifier
+   Input
+    Identifier
+   Input
+    Identifier
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+   Identifier
+   Input
+    Identifier
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+   Identifier
+
+Semantic Checker:
+z is a variable and int
+z is a variable and int
+arg_1 is a variable and int
+arg_1 is a variable and int
+arg_2 is a variable and int
+w is a variable and int
+q is a variable and int
+w is a variable and int
+r is a variable and int
+w is a variable and int
+q is a variable and int
+g is a variable and int
+f is a variable and int
+f is a variable and int
+g is a variable and int
+a is a variable and int
+a is a variable and int
+fact is a function and int
+All functions were called
+q in scope GLOBAL_SCOPE is written and read from
+r in scope GLOBAL_SCOPE is written and read from
+f in scope GLOBAL_SCOPE is not written to but is read from
+x in scope GLOBAL_SCOPE is written and read from
+y in scope GLOBAL_SCOPE is written and read from
+z in scope GLOBAL_SCOPE is written and read from
+n in scope GLOBAL_SCOPE is written and read from
+res in scope main is written and read from
+f in scope main is written and read from
+w in scope function-2 is written and read from
+arg_1 in scope function-1 is written and read from
+arg_2 in scope function-1 is written and read from
+a in scope function-4 is written and read from
+f in scope function-4 is written and read from
+g in scope function-4 is written and read from
+f in scope function-3 is written and read from
+g in scope function-3 is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+VAR            int            q              GLOBAL_SCOPE   {readFrom=true, written=true, value=[q, 1]}
+VAR            int            r              GLOBAL_SCOPE   {readFrom=true, written=true, value=[r, w]}
+FUNCTION       int            fact           GLOBAL_SCOPE   {readFrom=true, paramList=[a, int]}
+VAR            int            f              GLOBAL_SCOPE   {readFrom=true}
+VAR            int            x              GLOBAL_SCOPE   {readFrom=true, written=true}
+VAR            int            y              GLOBAL_SCOPE   {readFrom=true, written=true}
+FUNCTION       int            gcd            GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            int            z              GLOBAL_SCOPE   {readFrom=true, written=true, value=[f]}
+FUNCTION       void           divide         GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+FUNCTION       int            multiply       GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            int            n              GLOBAL_SCOPE   {readFrom=true, written=true}
+VAR            int            res            main           {readFrom=true, written=true, value=[gcd]}
+VAR            int            f              main           {readFrom=true, written=true, value=[fact]}
+VAR            int            w              function-2     {readFrom=true, written=true, value=[w, 2]}
+VAR            int            arg_1          function-1     {readFrom=true, written=true, value=[2, arg_1]}
+VAR            int            arg_2          function-1     {readFrom=true, written=true, value=[arg_2, 2]}
+VAR            int            a              function-4     {readFrom=true, written=true}
+VAR            int            f              function-4     {readFrom=true, written=true, value=[a, fact]}
+VAR            int            g              function-4     {readFrom=true, written=true, value=[a, 1]}
+VAR            int            f              function-3     {readFrom=true, written=true, value=[f, g]}
+VAR            int            g              function-3     {readFrom=true, written=true, value=[g, f]}

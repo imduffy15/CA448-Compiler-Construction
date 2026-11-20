@@ -1,0 +1,2 @@
+var g : int;
+main { g := 1; !g; }

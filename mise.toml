@@ -37,11 +37,41 @@ depends = ["build"]
 run = 'java -cp out SimpL < {{arg(name="file")}}'
 
 [tasks.test]
-description = "Run the checker against the bundled example programs"
+description = "Run every SimpL program in build/ and tests/ and compare its output with tests/<name>.expected"
 depends = ["build"]
 run = '''
-for f in build/*.spl; do
-  echo "=== $f"
-  java -cp out SimpL < "$f" > /dev/null || exit 1
+failed=0
+TMPDIR_DIFF=$(mktemp)
+for f in build/*.spl tests/*.spl; do
+  name=$(basename "$f" .spl)
+  expected="tests/$name.expected"
+  if [ ! -f "$expected" ]; then
+    echo "MISSING $expected (run: mise run test:update)"; failed=1; continue
+  fi
+  if java -cp out SimpL < "$f" 2>&1 | diff -u "$expected" - > "$TMPDIR_DIFF"; then
+    echo "ok   $name"
+  else
+    echo "FAIL $name"; cat "$TMPDIR_DIFF"; failed=1
+  fi
 done
+exit $failed
+'''
+
+[tasks."test:update"]
+description = "Regenerate the tests/<name>.expected snapshots from the current checker output"
+depends = ["build"]
+run = '''
+for f in build/*.spl tests/*.spl; do
+  java -cp out SimpL < "$f" > "tests/$(basename "$f" .spl).expected" 2>&1
+done
+'''
+
+[tasks."check:generated"]
+description = "Fail if the committed build/ differs from what src/ generates (run after generate)"
+depends = ["generate"]
+run = '''
+if ! git diff --exit-code --stat -- build/ || [ -n "$(git ls-files --others --exclude-standard -- build/)" ]; then
+  echo "build/ is out of date with src/. Run 'mise run generate' and commit the result."
+  exit 1
+fi
 '''

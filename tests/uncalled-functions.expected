@@ -1,0 +1,31 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+  Main
+   FunctionCall
+    Identifier
+    ArgList
+
+Semantic Checker:
+Error: function b is declared but never called
+Error: function c is declared but never called
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       void           a              GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+FUNCTION       void           b              GLOBAL_SCOPE   {paramList=[]} 
+FUNCTION       void           c              GLOBAL_SCOPE   {paramList=[]} 

@@ -1,0 +1,55 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+   FunctionBody
+    Identifier
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   FunctionCall
+    Identifier
+    ArgList
+     Identifier
+   FunctionCall
+    Identifier
+    ArgList
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+
+Semantic Checker:
+Error: incorrect number of function arguments for none: expected 0, got 1
+Error: incorrect number of function arguments for one: expected 1, got 0
+All functions were called
+x in scope main is written and read from
+a in scope function-2 is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       int            one            GLOBAL_SCOPE   {readFrom=true, paramList=[a, int]}
+FUNCTION       void           none           GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            int            x              main           {readFrom=true, written=true, value=[one]}
+VAR            int            a              function-2     {readFrom=true, written=true}

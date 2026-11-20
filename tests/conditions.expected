@@ -1,0 +1,93 @@
+Abstract Syntax Tree:
+ Program
+  Main
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+    Type
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Boolean
+   Assignment
+    Identifier
+    Boolean
+   Not
+    Condition
+     Identifier
+   Assignment
+    Identifier
+    Boolean
+   Or
+    And
+     Condition
+      Identifier
+      Identifier
+     Condition
+      Identifier
+    Not
+     Condition
+      Identifier
+   Assignment
+    Identifier
+    Number
+   Condition
+    Identifier
+   Assignment
+    Identifier
+    Number
+   Condition
+    Identifier
+   Assignment
+    Identifier
+    Number
+   Condition
+    Identifier
+    Identifier
+   Assignment
+    Identifier
+    Number
+   Condition
+    Identifier
+    Identifier
+   Assignment
+    Identifier
+    Number
+   Condition
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+
+Semantic Checker:
+b is a variable and boolean
+b is a variable and boolean
+c is a variable and boolean
+b is a variable and boolean
+Error: condition i (int) must be boolean
+Error: operand b (boolean) of < must be int or real
+Error: cannot compare b (boolean) with i (int) using =
+All functions were called
+b in scope main is written and read from
+c in scope main is written and read from
+i in scope main is written and read from
+j in scope main is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+VAR            boolean        b              main           {readFrom=true, written=true, value=[false]}
+VAR            boolean        c              main           {readFrom=true, written=true, value=[false]}
+VAR            int            i              main           {readFrom=true, written=true, value=[7]}
+VAR            int            j              main           {readFrom=true, written=true, value=[2]}

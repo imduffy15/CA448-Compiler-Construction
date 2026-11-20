@@ -1,0 +1,54 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+   FunctionBody
+    VarDecl
+     IdentList
+      Identifier
+     Type
+    Identifier
+  Main
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Identifier
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+   Assignment
+    Identifier
+    Number
+
+Semantic Checker:
+Error: attempt to use undeclared identifier nope
+All functions were called
+x in scope main is written and read from
+y in scope main is written and read from
+z in scope main is written but is not read from
+p in scope function-1 is written and read from
+unused in scope function-1 is not written to or read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       int            f              GLOBAL_SCOPE   {readFrom=true, paramList=[p, int]}
+VAR            int            x              main           {readFrom=true, written=true, value=[1]}
+VAR            int            y              main           {readFrom=true, written=true, value=[x]}
+VAR            int            z              main           {written=true, value=[f]}
+VAR            int            p              function-1     {readFrom=true, written=true}
+VAR            int            unused         function-1     {}             

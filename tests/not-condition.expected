@@ -1,0 +1,25 @@
+Abstract Syntax Tree:
+ Program
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Boolean
+   Not
+    Condition
+     Identifier
+   Assignment
+    Identifier
+    Boolean
+
+Semantic Checker:
+b is a variable and boolean
+All functions were called
+b in scope main is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+VAR            boolean        b              main           {readFrom=true, written=true, value=[false]}

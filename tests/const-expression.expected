@@ -1,0 +1,26 @@
+Abstract Syntax Tree:
+ Program
+  ConstDecl
+   Identifier
+   Type
+   AddExpr
+    Number
+    Number
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Identifier
+
+Semantic Checker:
+All functions were called
+k in scope GLOBAL_SCOPE is written and read from
+a in scope main is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+CONST          int            k              GLOBAL_SCOPE   {readFrom=true, written=true, value=[1, 2]}
+VAR            int            a              main           {written=true, value=[k]}

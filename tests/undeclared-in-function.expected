@@ -1,0 +1,34 @@
+Abstract Syntax Tree:
+ Program
+  VarDecl
+   IdentList
+    Identifier
+   Type
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    Assignment
+     Identifier
+     Identifier
+  Main
+   Assignment
+    Identifier
+    Number
+   FunctionCall
+    Identifier
+    ArgList
+   Identifier
+   Identifier
+
+Semantic Checker:
+Error: attempt to use undeclared identifier undeclared1
+Error: attempt to use undeclared identifier undeclared2
+All functions were called
+g in scope GLOBAL_SCOPE is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       void           f              GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            int            g              GLOBAL_SCOPE   {readFrom=true, written=true, value=[1]}

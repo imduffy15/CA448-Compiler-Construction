@@ -1,0 +1,4 @@
+var x : int;
+const k : int = 5;
+int f () { var x : boolean; x := true; return 1; }
+main { var y : int; x := 1; y := x; k := 3; f := 2; y := f(); }

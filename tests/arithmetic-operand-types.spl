@@ -1,0 +1,4 @@
+const c : int = 2;
+boolean flag () { return true; }
+main { var i : int; var r : real; var b : boolean; i := 1; r := 1.5; b := true;
+  i := i + c; r := r * 2.0; i := i + b; i := i - false; i := 3 * flag(); }

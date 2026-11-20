@@ -1,0 +1,3 @@
+const k : int = 5;
+void f () { return; }
+main { var x : int; var b : boolean; k := 3; x := 1; f(x); b := true; x := x + b; }

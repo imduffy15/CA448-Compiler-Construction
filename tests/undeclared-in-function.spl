@@ -1,0 +1,3 @@
+var g : int;
+void f () { g := undeclared1; return; }
+main { g := 1; f(); !g; !undeclared2; }

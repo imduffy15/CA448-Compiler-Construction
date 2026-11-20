@@ -1,0 +1,55 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+   FunctionBody
+    MultExpr
+     Identifier
+     Identifier
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Condition
+    Identifier
+    Number
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+   Identifier
+   Assignment
+    Identifier
+    AddExpr
+     Identifier
+     Number
+
+Semantic Checker:
+x is a variable and real
+x is a variable and real
+x is a variable and int
+All functions were called
+squ in scope main is written and read from
+x in scope main is written and read from
+x in scope function-1 is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       real           square         GLOBAL_SCOPE   {readFrom=true, paramList=[x, real]}
+VAR            real           squ            main           {readFrom=true, written=true, value=[square]}
+VAR            int            x              main           {readFrom=true, written=true, value=[x, 1]}
+VAR            real           x              function-1     {readFrom=true, written=true}
