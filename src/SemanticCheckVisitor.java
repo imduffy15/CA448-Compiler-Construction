@@ -146,6 +146,8 @@ public class SemanticCheckVisitor implements SimpLVisitor {
             Token paramIdentifier = paramList.get(i);
             Token paramType = paramList.get(++i);
             STC scopedVariable = new STC(paramIdentifier, paramType, scope, DataType.VAR);
+            // A parameter is written to by the caller.
+            scopedVariable.addData("written", true);
             if (functionSymbolTable == null) functionSymbolTable = new HashMap<>();
 
             if (functionSymbolTable.get(paramIdentifier.image) != null) {
@@ -194,7 +196,14 @@ public class SemanticCheckVisitor implements SimpLVisitor {
     @Override
     public Object visit(ASTAssignment node, Object data) {
 
-        Token identifier = (Token) node.jjtGetChild(0).jjtAccept(this, data);
+        // Read the target's token directly. Visiting the Identifier node would mark
+        // the variable as "read from" when it is only being written to.
+        Token identifier = (Token) ((SimpleNode) node.jjtGetChild(0)).jjtGetValue();
+        HashMap<String, STC> currentSymbolTable = symbolTable.get(scope);
+        if ((currentSymbolTable == null || currentSymbolTable.get(identifier.image) == null)
+                && symbolTable.get(GLOBAL_SCOPE).get(identifier.image) == null) {
+            System.out.println("Error: attempt to use undeclared identifier " + identifier.image);
+        }
 
         List<Token> assignment = null;
 
