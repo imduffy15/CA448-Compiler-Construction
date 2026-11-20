@@ -216,30 +216,28 @@ public class SemanticCheckVisitor implements SimpLVisitor {
             assignment = (List<Token>) obj;
         }
 
+        // Resolve the target the same way reads are resolved: the current scope
+        // first, then the global scope. A local declaration shadows a global one.
+        STC target = null;
         HashMap<String, STC> scopedSymbolTable = symbolTable.get(scope);
-
-        STC scopedVariable = scopedSymbolTable.get(identifier.image);
-        if (scopedVariable != null) {
-            scopedVariable.addData("written", true);
-            scopedVariable.addData("value", assignment);
-
-            if(scopedVariable.getData("value") != null) {
-                checkType(scopedVariable, scopedVariable.getData("value"));
-            }
+        if (scopedSymbolTable != null) {
+            target = scopedSymbolTable.get(identifier.image);
+        }
+        if (target == null) {
+            target = symbolTable.get(GLOBAL_SCOPE).get(identifier.image);
         }
 
-        HashMap<String, STC> globalSymbolTable = symbolTable.get(GLOBAL_SCOPE);
-
-        STC globalVariable = globalSymbolTable.get(identifier.image);
-        if (globalVariable != null) {
-            globalVariable.addData("written", true);
-            globalVariable.addData("value", assignment);
-
-            if(globalVariable.getData("value") != null) {
-                checkType(globalVariable, globalVariable.getData("value"));
+        // An undeclared target has already been reported when its Identifier node was visited.
+        if (target != null) {
+            if (target.getKind() != DataType.VAR) {
+                System.out.println("Error: cannot assign to " + identifier.image + ", it is a "
+                        + target.getKind().toString().toLowerCase() + " not a variable");
+            } else {
+                target.addData("written", true);
+                target.addData("value", assignment);
+                checkType(target, assignment);
             }
         }
-
 
         return null;
     }
