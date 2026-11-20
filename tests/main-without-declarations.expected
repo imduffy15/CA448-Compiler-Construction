@@ -1,0 +1,19 @@
+Abstract Syntax Tree:
+ Program
+  VarDecl
+   IdentList
+    Identifier
+   Type
+  Main
+   Assignment
+    Identifier
+    Number
+   Identifier
+
+Semantic Checker:
+All functions were called
+g in scope GLOBAL_SCOPE is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+VAR            int            g              GLOBAL_SCOPE   {readFrom=true, written=true, value=[1]}

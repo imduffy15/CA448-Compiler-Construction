@@ -1,0 +1,71 @@
+Abstract Syntax Tree:
+ Program
+  Main
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+     Identifier
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    AddExpr
+     MultExpr
+      Identifier
+      Identifier
+     Identifier
+   Assignment
+    Identifier
+    SubExpr
+     SubExpr
+      Identifier
+      Identifier
+     Identifier
+   Assignment
+    Identifier
+    MultExpr
+     AddExpr
+      Identifier
+      Identifier
+     Identifier
+   Assignment
+    Identifier
+    AddExpr
+     SubFrag
+      Identifier
+     Identifier
+
+Semantic Checker:
+a is a variable and int
+b is a variable and int
+c is a variable and int
+a is a variable and int
+b is a variable and int
+c is a variable and int
+a is a variable and int
+b is a variable and int
+c is a variable and int
+a is a variable and int
+b is a variable and int
+All functions were called
+a in scope main is written and read from
+b in scope main is written and read from
+c in scope main is written and read from
+x in scope main is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+VAR            int            a              main           {readFrom=true, written=true, value=[1]}
+VAR            int            b              main           {readFrom=true, written=true, value=[2]}
+VAR            int            c              main           {readFrom=true, written=true, value=[3]}
+VAR            int            x              main           {written=true, value=[a, b]}

@@ -1,0 +1,18 @@
+Abstract Syntax Tree:
+ Program
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+
+Semantic Checker:
+All functions were called
+x in scope main is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+VAR            int            x              main           {written=true, value=[1]}

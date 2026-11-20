@@ -1,0 +1,17 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v5
+      - name: Check build/ is regenerated from src/
+        run: mise run check:generated
+      - name: Run tests
+        run: mise run test

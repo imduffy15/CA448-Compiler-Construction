@@ -1,0 +1,3 @@
+int f (a:int, b:real, c:boolean) { return a; }
+int g (p:int, p:int) { return p; }
+main { var x : int; x := f(x, x, x); x := g(x, x); }

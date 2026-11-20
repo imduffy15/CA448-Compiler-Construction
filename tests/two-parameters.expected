@@ -1,0 +1,40 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+    Identifier
+    Type
+   FunctionBody
+    Identifier
+  Main
+   VarDecl
+    IdentList
+     Identifier
+     Identifier
+    Type
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+      Identifier
+
+Semantic Checker:
+All functions were called
+x in scope main is written and read from
+y in scope main is not written to but is read from
+a in scope function-1 is written and read from
+b in scope function-1 is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       int            f              GLOBAL_SCOPE   {readFrom=true, paramList=[a, int, b, int]}
+VAR            int            x              main           {readFrom=true, written=true, value=[f]}
+VAR            int            y              main           {readFrom=true}
+VAR            int            a              function-1     {readFrom=true, written=true}
+VAR            int            b              function-1     {written=true} 

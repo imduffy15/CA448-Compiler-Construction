@@ -1,0 +1,2 @@
+int f (p:int) { var unused : int; return p; }
+main { var x, y, z : int; x := 1; y := x; z := f(y); nope := 1; }

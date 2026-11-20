@@ -1,0 +1,62 @@
+Abstract Syntax Tree:
+ Program
+  VarDecl
+   IdentList
+    Identifier
+   Type
+  ConstDecl
+   Identifier
+   Type
+   Number
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+    VarDecl
+     IdentList
+      Identifier
+     Type
+    Assignment
+     Identifier
+     Boolean
+    Number
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Identifier
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+
+Semantic Checker:
+Error: cannot assign to k, it is a const not a variable
+Error: cannot assign to f, it is a function not a variable
+All functions were called
+x in scope GLOBAL_SCOPE is written and read from
+k in scope GLOBAL_SCOPE is written but is not read from
+y in scope main is written but is not read from
+x in scope function-1 is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       int            f              GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+VAR            int            x              GLOBAL_SCOPE   {readFrom=true, written=true, value=[1]}
+CONST          int            k              GLOBAL_SCOPE   {written=true, value=[5]}
+VAR            int            y              main           {written=true, value=[f]}
+VAR            boolean        x              function-1     {written=true, value=[true]}

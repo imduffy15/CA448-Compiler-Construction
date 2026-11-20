@@ -1,0 +1,2 @@
+var a : int;
+main { var b, c : int; ?a; ?b; c := a + b; !c; ?missing; }

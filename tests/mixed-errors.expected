@@ -1,0 +1,56 @@
+Abstract Syntax Tree:
+ Program
+  ConstDecl
+   Identifier
+   Type
+   Number
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+   FunctionBody
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Number
+   Assignment
+    Identifier
+    Number
+   FunctionCall
+    Identifier
+    ArgList
+     Identifier
+   Assignment
+    Identifier
+    Boolean
+   Assignment
+    Identifier
+    AddExpr
+     Identifier
+     Identifier
+
+Semantic Checker:
+Error: cannot assign to k, it is a const not a variable
+Error: incorrect number of function arguments for f: expected 0, got 1
+x is a variable and int
+Error: arithmetic operand b must be int or real but variable b is boolean
+Error: Right hand side of x does not match type int
+All functions were called
+k in scope GLOBAL_SCOPE is written but is not read from
+b in scope main is written and read from
+x in scope main is written and read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       void           f              GLOBAL_SCOPE   {readFrom=true, paramList=[]}
+CONST          int            k              GLOBAL_SCOPE   {written=true, value=[5]}
+VAR            boolean        b              main           {readFrom=true, written=true, value=[true]}
+VAR            int            x              main           {readFrom=true, written=true, value=[x, b]}

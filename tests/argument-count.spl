@@ -1,0 +1,3 @@
+void none () { return; }
+int one (a:int) { return a; }
+main { var x : int; x := 1; none(x); none(); x := one(); x := one(x); }

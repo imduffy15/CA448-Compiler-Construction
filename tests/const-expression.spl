@@ -1,0 +1,2 @@
+const k : int = 1 + 2;
+main { var a : int; a := k; }

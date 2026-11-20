@@ -1,0 +1,63 @@
+Abstract Syntax Tree:
+ Program
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+    Identifier
+    Type
+    Identifier
+    Type
+   FunctionBody
+    Identifier
+  FunctionDecl
+   Type
+   Identifier
+   ParamList
+    Identifier
+    Type
+    Identifier
+    Type
+   FunctionBody
+    Identifier
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+      Identifier
+      Identifier
+   Assignment
+    Identifier
+    FunctionCall
+     Identifier
+     ArgList
+      Identifier
+      Identifier
+
+Semantic Checker:
+Error: Identifier p already declared in function-2
+All functions were called
+x in scope main is written and read from
+p in scope function-2 is written and read from
+a in scope function-1 is written and read from
+b in scope function-1 is written but is not read from
+c in scope function-1 is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+FUNCTION       int            f              GLOBAL_SCOPE   {readFrom=true, paramList=[a, int, b, real, c, boolean]}
+FUNCTION       int            g              GLOBAL_SCOPE   {readFrom=true, paramList=[p, int, p, int]}
+VAR            int            x              main           {readFrom=true, written=true, value=[g]}
+VAR            int            p              function-2     {readFrom=true, written=true}
+VAR            int            a              function-1     {readFrom=true, written=true}
+VAR            real           b              function-1     {written=true} 
+VAR            boolean        c              function-1     {written=true} 

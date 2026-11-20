@@ -1,0 +1,49 @@
+Abstract Syntax Tree:
+ Program
+  ConstDecl
+   Identifier
+   Type
+   AddExpr
+    Number
+    Number
+   Identifier
+   Type
+   Boolean
+   Identifier
+   Type
+   Boolean
+  Main
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   VarDecl
+    IdentList
+     Identifier
+    Type
+   Assignment
+    Identifier
+    Identifier
+   Assignment
+    Identifier
+    Identifier
+   Assignment
+    Identifier
+    Identifier
+
+Semantic Checker:
+Error: Right hand side of bad does not match type int
+All functions were called
+b in scope GLOBAL_SCOPE is written and read from
+bad in scope GLOBAL_SCOPE is written and read from
+k in scope GLOBAL_SCOPE is written and read from
+a in scope main is written but is not read from
+c in scope main is written but is not read from
+
+Symbol Table:
+Kind           Type           Identifier     Scope          Data           
+CONST          boolean        b              GLOBAL_SCOPE   {readFrom=true, written=true, value=[true]}
+CONST          int            bad            GLOBAL_SCOPE   {readFrom=true, written=true, value=[false]}
+CONST          int            k              GLOBAL_SCOPE   {readFrom=true, written=true, value=[1, 2]}
+VAR            int            a              main           {written=true, value=[bad]}
+VAR            boolean        c              main           {written=true, value=[b]}

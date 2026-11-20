@@ -1,0 +1,2 @@
+int f (a:int, b:int) { return a; }
+main { var x, y : int; x := f(x, y); }

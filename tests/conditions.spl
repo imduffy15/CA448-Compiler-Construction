@@ -1,0 +1,9 @@
+main { var i, j : int; var b, c : boolean; i := 1; j := 2; b := true; c := false;
+  while not b do b := false;
+  if i < j and b or not c then i := 2 else {};
+  if b then i := 3 else {};
+  if i then i := 4 else {};
+  if b < i then i := 5 else {};
+  if b = i then i := 6 else {};
+  if i = 2.5 then i := 7 else {};
+}
