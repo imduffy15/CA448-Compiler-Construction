@@ -269,6 +269,29 @@ public class SemanticCheckVisitor implements SimpLVisitor {
     }
 
     @Override
+    public Object visit(ASTInput node, Object data) {
+        // "?x" reads a value from input into x, so x is written to (not read from).
+        Token identifier = (Token) ((SimpleNode) node.jjtGetChild(0)).jjtGetValue();
+
+        STC target = null;
+        HashMap<String, STC> scopedSymbolTable = symbolTable.get(scope);
+        if (scopedSymbolTable != null) {
+            target = scopedSymbolTable.get(identifier.image);
+        }
+        if (target == null) {
+            target = symbolTable.get(GLOBAL_SCOPE).get(identifier.image);
+        }
+
+        if (target == null) {
+            System.out.println("Error: attempt to use undeclared identifier " + identifier.image);
+        } else {
+            target.addData("written", true);
+        }
+
+        return null;
+    }
+
+    @Override
     public Object visit(ASTFunctionCall node, Object data) {
 
         Token identifier = (Token) node.jjtGetChild(0).jjtAccept(this, data);
