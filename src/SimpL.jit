@@ -280,45 +280,40 @@ void functionCall() #FunctionCall :
 	identifier() <LPAREN> arg_list() <RPAREN>
 }
 
+// Precedence, lowest to highest: + -, then * / %, then unary + - and primaries.
+// The binary operators are left-associative: a - b - c parses as (a - b) - c.
 void expression() :
 {}
 {
-    LOOKAHEAD(2)
-    functionCall()
-    | term() addSubExpression()
-}
-
-void addSubExpression() :
-{}
-{
-    <ADD> expression() {jjtThis.value = new Token(ADD, tokenImage[ADD]);}  #AddExpr(2)
-    | <SUB> expression() {jjtThis.value = new Token(SUB, tokenImage[SUB]);} #SubExpr(2)
-    | {}
+    term()
+    (
+        <ADD> term() #AddExpr(2)
+        | <SUB> term() #SubExpr(2)
+    )*
 }
 
 void term() :
 {}
 {
-  fragment() multDivModExpression()
-}
-
-void multDivModExpression() :
-{}
-{
-  <MULT> expression() #MultExpr(2)
-  | <DIV> expression() #DivExpr(2)
-  | <MOD> expression() #ModExpr(2)
-  | {}
+    fragment()
+    (
+        <MULT> fragment() #MultExpr(2)
+        | <DIV> fragment() #DivExpr(2)
+        | <MOD> fragment() #ModExpr(2)
+    )*
 }
 
 void fragment() :
 {}
 {
-  identifier()
-  | number()
-  | bool()
-  | <ADD> fragment() #AddFrag
-  | <SUB> fragment() #SubFrag
+    LOOKAHEAD(2)
+    functionCall()
+    | identifier()
+    | number()
+    | bool()
+    | <LPAREN> expression() <RPAREN>
+    | <ADD> fragment() #AddFrag
+    | <SUB> fragment() #SubFrag
 }
 
 void condition() #Condition:

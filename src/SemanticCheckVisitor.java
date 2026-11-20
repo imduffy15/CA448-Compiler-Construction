@@ -399,14 +399,14 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 
     @Override
     public Object visit(ASTAddFrag node, Object data) {
-        node.childrenAccept(this, data);
-        return null;
+        // A unary sign doesn't change the operand's type, so pass the operand's value through.
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
     public Object visit(ASTSubFrag node, Object data) {
-        node.childrenAccept(this, data);
-        return null;
+        // A unary sign doesn't change the operand's type, so pass the operand's value through.
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
