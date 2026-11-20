@@ -93,17 +93,25 @@ public class SemanticCheckVisitor implements SimpLVisitor {
         if(scopedSymbolTable == null) scopedSymbolTable = new HashMap<String, STC>();
 
         for (int i = 0; i < node.jjtGetNumChildren(); i=i+3) {
-        	Token identifier = (Token) node.jjtGetChild(i).jjtAccept(this, data);
-        	Token type = (Token) node.jjtGetChild(i+1).jjtAccept(this, data);
-        	List<Token> assignment;
-            if (node.jjtGetChild(i+2).jjtAccept(this, data) instanceof Token) {
+            // Read the identifier token directly: visiting the Identifier node would
+            // look it up (and report it as undeclared) before it has been declared.
+            Token identifier = (Token) ((SimpleNode) node.jjtGetChild(i)).jjtGetValue();
+            Token type = (Token) node.jjtGetChild(i+1).jjtAccept(this, data);
+
+            // The value is the third node of each (identifier, type, expression) triple.
+            Object value = node.jjtGetChild(i+2).jjtAccept(this, data);
+            List<Object> assignment;
+            if (value instanceof Token) {
                 assignment = new ArrayList<>();
-                assignment.add((Token) node.jjtGetChild(i).jjtAccept(this, data));
+                assignment.add(value);
             } else {
-                assignment = ((List<Token>) node.jjtGetChild(i).jjtAccept(this, data));
+                assignment = (List<Object>) value;
             }
             STC variable = new STC(identifier, type, scope, DataType.CONST);
             variable.addData("value", assignment);
+            // A constant is initialised by its declaration.
+            variable.addData("written", true);
+            checkType(variable, assignment);
 
 	        if (scopedSymbolTable.get(identifier.image) != null) {
 	            System.out.println("Error: Identifier " + identifier.image + " already declared in " + scope);
