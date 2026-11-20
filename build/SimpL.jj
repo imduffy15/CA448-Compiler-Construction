@@ -1021,11 +1021,11 @@ void arg_list()          :
 {/*@bgen(jjtree) ArgList */
   try {
 /*@egen*/
-  (identifier() list_()) |/*@bgen(jjtree)*/
-                           {
-                             jjtree.closeNodeScope(jjtn000, true);
-                             jjtc000 = false;
-                           }
+  (expression() (<COMMA> expression())*) |/*@bgen(jjtree)*/
+                                           {
+                                             jjtree.closeNodeScope(jjtn000, true);
+                                             jjtc000 = false;
+                                           }
 /*@egen*/ {}/*@bgen(jjtree)*/
   } catch (Throwable jjte000) {
     if (jjtc000) {
