@@ -1243,7 +1243,15 @@ if (jjtc000) {
 
   /** Reinitialise. */
   static public void ReInit(java.io.Reader stream) {
-    jj_input_stream.ReInit(stream, 1, 1);
+	if (jj_input_stream == null) {
+      jj_input_stream = new SimpleCharStream(stream, 1, 1);
+   } else {
+      jj_input_stream.ReInit(stream, 1, 1);
+   }
+   if (token_source == null) {
+      token_source = new SimpLTokenManager(jj_input_stream);
+   }
+
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
@@ -1363,27 +1371,40 @@ if (jjtc000) {
   static private int jj_endpos;
 
   static private void jj_add_error_token(int kind, int pos) {
-    if (pos >= 100) return;
+    if (pos >= 100) {
+       return;
+    }
+
     if (pos == jj_endpos + 1) {
       jj_lasttokens[jj_endpos++] = kind;
     } else if (jj_endpos != 0) {
       jj_expentry = new int[jj_endpos];
+
       for (int i = 0; i < jj_endpos; i++) {
         jj_expentry[i] = jj_lasttokens[i];
       }
-      jj_entries_loop: for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
-        int[] oldentry = (int[])(it.next());
+
+      for (int[] oldentry : jj_expentries) {
         if (oldentry.length == jj_expentry.length) {
+          boolean isMatched = true;
+
           for (int i = 0; i < jj_expentry.length; i++) {
             if (oldentry[i] != jj_expentry[i]) {
-              continue jj_entries_loop;
+              isMatched = false;
+              break;
             }
+
           }
-          jj_expentries.add(jj_expentry);
-          break jj_entries_loop;
+          if (isMatched) {
+            jj_expentries.add(jj_expentry);
+            break;
+          }
         }
       }
-      if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+
+      if (pos != 0) {
+        jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+      }
     }
   }
 
@@ -1435,19 +1456,21 @@ if (jjtc000) {
   static private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 2; i++) {
-    try {
-      JJCalls p = jj_2_rtns[i];
-      do {
-        if (p.gen > jj_gen) {
-          jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
-          switch (i) {
-            case 0: jj_3_1(); break;
-            case 1: jj_3_2(); break;
+      try {
+        JJCalls p = jj_2_rtns[i];
+
+        do {
+          if (p.gen > jj_gen) {
+            jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+            switch (i) {
+              case 0: jj_3_1(); break;
+              case 1: jj_3_2(); break;
+            }
           }
-        }
-        p = p.next;
-      } while (p != null);
-      } catch(LookaheadSuccess ls) { }
+          p = p.next;
+        } while (p != null);
+
+        } catch(LookaheadSuccess ls) { }
     }
     jj_rescan = false;
   }
@@ -1458,7 +1481,10 @@ if (jjtc000) {
       if (p.next == null) { p = p.next = new JJCalls(); break; }
       p = p.next;
     }
-    p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
+
+    p.gen = jj_gen + xla - jj_la; 
+    p.first = token;
+    p.arg = xla;
   }
 
   static final class JJCalls {

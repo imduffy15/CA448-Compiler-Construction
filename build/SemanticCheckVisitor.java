@@ -38,11 +38,11 @@ public class SemanticCheckVisitor implements SimpLVisitor {
                 if (symbolTableChild.getKind() != DataType.FUNCTION) {
                     if (symbolTableChild.getData("written") == null && symbolTableChild.getData("readFrom") == null) {
                         System.out.println(symbolTableChild.getIdentifier() + " in scope " + symbolTableChild.getScope() + " is not written to or read from");
-                    } else if (symbolTableChild.getData("written") == null && symbolTableChild.getData("readFrom") == true) {
+                    } else if (symbolTableChild.getData("written") == null && Boolean.TRUE.equals(symbolTableChild.getData("readFrom"))) {
                         System.out.println(symbolTableChild.getIdentifier() + " in scope " + symbolTableChild.getScope() + " is not written to but is read from");
-                    } else if (symbolTableChild.getData("written") == true && symbolTableChild.getData("readFrom") == null) {
+                    } else if (Boolean.TRUE.equals(symbolTableChild.getData("written")) && symbolTableChild.getData("readFrom") == null) {
                         System.out.println(symbolTableChild.getIdentifier() + " in scope " + symbolTableChild.getScope() + " is written but is not read from");
-                    } else if (symbolTableChild.getData("written") == true && symbolTableChild.getData("readFrom") == true) {
+                    } else if (Boolean.TRUE.equals(symbolTableChild.getData("written")) && Boolean.TRUE.equals(symbolTableChild.getData("readFrom"))) {
                         System.out.println(symbolTableChild.getIdentifier() + " in scope " + symbolTableChild.getScope() + " is written and read from");
                     }
                 }

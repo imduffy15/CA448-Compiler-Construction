@@ -1,0 +1,47 @@
+[tools]
+java = "temurin-25"
+
+[env]
+JAVACC_VERSION = "6.1.2"
+JAVACC_JAR = "{{config_root}}/.tools/javacc-{{env.JAVACC_VERSION}}.jar"
+
+[tasks.javacc]
+description = "Download the JavaCC jar (includes JJTree) from Maven Central"
+run = '''
+[ -f "$JAVACC_JAR" ] && exit 0
+mkdir -p "$(dirname "$JAVACC_JAR")"
+curl -fsSL -o "$JAVACC_JAR" "https://repo1.maven.org/maven2/net/java/dev/javacc/javacc/$JAVACC_VERSION/javacc-$JAVACC_VERSION.jar"
+'''
+
+[tasks.generate]
+description = "Copy src/ into build/ and regenerate the parser with JJTree + JavaCC"
+depends = ["javacc"]
+run = '''
+cp src/*.java src/SimpL.jit build/
+cd build
+java -cp "$JAVACC_JAR" jjtree SimpL.jit
+java -cp "$JAVACC_JAR" javacc SimpL.jj
+'''
+
+[tasks.build]
+description = "Compile build/ into out/"
+depends = ["generate"]
+run = '''
+rm -rf out
+javac -nowarn -d out build/*.java
+'''
+
+[tasks.run]
+description = "Run the parser and semantic checker on a SimpL file, e.g. mise run run build/example.spl"
+depends = ["build"]
+run = 'java -cp out SimpL < {{arg(name="file")}}'
+
+[tasks.test]
+description = "Run the checker against the bundled example programs"
+depends = ["build"]
+run = '''
+for f in build/*.spl; do
+  echo "=== $f"
+  java -cp out SimpL < "$f" > /dev/null || exit 1
+done
+'''
