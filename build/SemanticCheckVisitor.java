@@ -272,7 +272,7 @@ public class SemanticCheckVisitor implements SimpLVisitor {
     public Object visit(ASTFunctionCall node, Object data) {
 
         Token identifier = (Token) node.jjtGetChild(0).jjtAccept(this, data);
-        List<Token> arguments = (List<Token>) node.jjtGetChild(1).jjtAccept(this, data);
+        List<Object> arguments = (List<Object>) node.jjtGetChild(1).jjtAccept(this, data);
 
         HashMap<String, STC> globalSymbolTable = symbolTable.get(GLOBAL_SCOPE);
 
@@ -422,10 +422,12 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 
     @Override
     public Object visit(ASTArgList node, Object data) {
-        List<Token> argList = new ArrayList();
+        // Each argument is an expression: a Token for a single value, or a List
+        // for an arithmetic expression.
+        List<Object> argList = new ArrayList<>();
 
         for (int i = 0; i < node.jjtGetNumChildren(); i++) {
-            argList.add((Token) node.jjtGetChild(i).jjtAccept(this, data));
+            argList.add(node.jjtGetChild(i).jjtAccept(this, data));
         }
 
         return argList;

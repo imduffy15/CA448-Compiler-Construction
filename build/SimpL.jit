@@ -338,7 +338,7 @@ void ident_list() #IdentList :
 void arg_list() #ArgList :
 {}
 {
-  (identifier() list_()) | {}
+  (expression() (<COMMA> expression())*) | {}
 }
 
 void list_() :
