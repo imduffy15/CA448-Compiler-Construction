@@ -347,31 +347,37 @@ public class SemanticCheckVisitor implements SimpLVisitor {
     	if(!(obj instanceof Token)) return;
     	Token token = (Token) obj;
 
+    	// Literal operands: Number and Boolean nodes set the token kind to the literal's type.
+    	if(token.kind != SimpLConstants.IDENTIFIER) {
+    		if(token.kind != SimpLConstants.INT && token.kind != SimpLConstants.REAL) {
+    			System.out.println("Error: arithmetic operand " + token.image + " must be int or real but is "
+    					+ SimpLConstants.tokenImage[token.kind].replace("\"", ""));
+    		}
+    		return;
+    	}
+
 		HashMap<String, STC> scopedSymbolTable = symbolTable.get(scope);
     	HashMap<String, STC> globalSymbolTable = symbolTable.get(GLOBAL_SCOPE);
 		STC symbolTableReference = null;
 
-		if(scopedSymbolTable.get(token.image) != null) {
+		if(scopedSymbolTable != null && scopedSymbolTable.get(token.image) != null) {
 			symbolTableReference = scopedSymbolTable.get(token.image);
 		} else if(globalSymbolTable.get(token.image) != null) {
 			symbolTableReference = globalSymbolTable.get(token.image);
 		}
-		if(symbolTableReference != null) {
-    		if(symbolTableReference.getKind() == DataType.VAR) {
-    			if(symbolTableReference.getType().kind == SimpLConstants.INT) {
-    				System.out.println(symbolTableReference.getIdentifier() + " is a variable and int");
-    			} else if(symbolTableReference.getType().kind == SimpLConstants.REAL) {
-    				System.out.println(symbolTableReference.getIdentifier() + " is a variable and real");
-    			}
-    		} else if(symbolTableReference.getKind() == DataType.CONST) {
-    			if(symbolTableReference.getType().kind == SimpLConstants.INT) {
-    				System.out.println(symbolTableReference.getIdentifier() + " is a const and int");
-    			} else if(symbolTableReference.getType().kind == SimpLConstants.REAL) {
-    				System.out.println(symbolTableReference.getIdentifier() + " is a const and real");
-    			}    			
-    		}
-		}
+		// Undeclared identifiers are reported by visit(ASTIdentifier).
+		if(symbolTableReference == null) return;
 
+		int type = symbolTableReference.getType().kind;
+		String kind = symbolTableReference.getKind() == DataType.VAR ? "variable" : symbolTableReference.getKind().toString().toLowerCase();
+		if(type == SimpLConstants.INT) {
+			System.out.println(symbolTableReference.getIdentifier() + " is a " + kind + " and int");
+		} else if(type == SimpLConstants.REAL) {
+			System.out.println(symbolTableReference.getIdentifier() + " is a " + kind + " and real");
+		} else {
+			System.out.println("Error: arithmetic operand " + token.image + " must be int or real but "
+					+ kind + " " + token.image + " is " + symbolTableReference.getType().image);
+		}
     }
 
     private Object visitArithmeticExpr(SimpleNode node, Object data) {
