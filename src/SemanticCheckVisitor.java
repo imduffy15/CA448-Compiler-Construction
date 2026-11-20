@@ -417,6 +417,16 @@ public class SemanticCheckVisitor implements SimpLVisitor {
         return Arrays.asList(left, right);
     }
 
+    private Object visitArithmeticExpr(SimpleNode node, Object data) {
+        // Visit each operand exactly once. An operand may itself be a nested
+        // expression, in which case it returns a List rather than a Token.
+        Object left = node.jjtGetChild(0).jjtAccept(this, data);
+        Object right = node.jjtGetChild(1).jjtAccept(this, data);
+        checkArgumentsMathOperators(left);
+        checkArgumentsMathOperators(right);
+        return Arrays.asList(left, right);
+    }
+
     @Override
     public Object visit(ASTAddExpr node, Object data) {
         return visitArithmeticExpr(node, data);
@@ -451,14 +461,14 @@ public class SemanticCheckVisitor implements SimpLVisitor {
 
     @Override
     public Object visit(ASTAddFrag node, Object data) {
-        node.childrenAccept(this, data);
-        return null;
+        // A unary sign doesn't change the operand's type, so pass the operand's value through.
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
     public Object visit(ASTSubFrag node, Object data) {
-        node.childrenAccept(this, data);
-        return null;
+        // A unary sign doesn't change the operand's type, so pass the operand's value through.
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
